@@ -1,31 +1,33 @@
 package com.shysoftware.h20tracker.model;
 
-public class Users {
-    Integer user_id;
-    String email;
-    String password_hash;
-    String username;
-    Double location_lat;
-    Double location_long;
-    String address;
-    String dateOfBirth;
-    Double height;
-    Double weight;
-    Gender gender;
-    Integer streak;
-    Double xp;
-    Rank rank;
-    String createdAt;
-    String updatedAt;
-    String lastLogin;
+import com.google.gson.annotations.SerializedName;
 
-    public Users(Integer user_id, String email, String password_hash, String username, Double location_lat, Double location_long, String address, String dateOfBirth, Double height, Double weight, Gender gender, Integer streak, Double xp, Rank rank, String createdAt, String updatedAt, String lastLogin) {
-        this.user_id = user_id;
-        this.email = email;
-        this.password_hash = password_hash;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
+public class User {
+
+    private String userId;
+    private String username;
+    private Double locationLat;
+    private Double locationLong;
+    private String address;
+    private LocalDate dateOfBirth;
+    private Double height;
+    private Double weight;
+    private Gender gender;
+    private Integer streak;
+    private Double xp;
+    private Rank rank;
+    @SerializedName("updatedAt")
+    private ZonedDateTime updatedAt;
+
+    public User(String userId, String username, Double locationLat, Double locationLong, String address, LocalDate dateOfBirth, Double height, Double weight, Gender gender, Integer streak, Double xp, Rank rank, ZonedDateTime updatedAt) {
+        this.userId = userId;
         this.username = username;
-        this.location_lat = location_lat;
-        this.location_long = location_long;
+        this.locationLat = locationLat;
+        this.locationLong = locationLong;
         this.address = address;
         this.dateOfBirth = dateOfBirth;
         this.height = height;
@@ -34,33 +36,15 @@ public class Users {
         this.streak = streak;
         this.xp = xp;
         this.rank = rank;
-        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.lastLogin = lastLogin;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword_hash() {
-        return password_hash;
-    }
-
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -71,20 +55,20 @@ public class Users {
         this.username = username;
     }
 
-    public Double getLocation_lat() {
-        return location_lat;
+    public Double getLocationLat() {
+        return locationLat;
     }
 
-    public void setLocation_lat(Double location_lat) {
-        this.location_lat = location_lat;
+    public void setLocationLat(Double locationLat) {
+        this.locationLat = locationLat;
     }
 
-    public Double getLocation_long() {
-        return location_long;
+    public Double getLocationLong() {
+        return locationLong;
     }
 
-    public void setLocation_long(Double location_long) {
-        this.location_long = location_long;
+    public void setLocationLong(Double locationLong) {
+        this.locationLong = locationLong;
     }
 
     public String getAddress() {
@@ -95,11 +79,11 @@ public class Users {
         this.address = address;
     }
 
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -151,27 +135,11 @@ public class Users {
         this.rank = rank;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
+    public ZonedDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public String getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(String lastLogin) {
-        this.lastLogin = lastLogin;
     }
 }
