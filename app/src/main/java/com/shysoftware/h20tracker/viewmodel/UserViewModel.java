@@ -30,13 +30,13 @@ public class UserViewModel extends ViewModel {
         repository.fetchUsers(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
                 Log.e("USER_FETCH", "Network error", e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
+                    assert response.body() != null;
                     String json = response.body().string();
                     Log.d("USER_RAW_JSON", json); // 👈 Add this line
                     List<User> userList = repository.parseUserResponse(json);
