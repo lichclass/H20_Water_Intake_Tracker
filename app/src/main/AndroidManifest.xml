@@ -15,6 +15,9 @@
         android:theme="@style/Theme.H20_Water_Intake_Tracker"
         tools:targetApi="31" >
         <activity
+            android:name=".views.SignIn"
+            android:exported="false" />
+        <activity
             android:name=".views.MainActivity"
             android:exported="true" >
             <intent-filter>
