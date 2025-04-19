@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="50dp"
         android:background="#4579FF"
         android:gravity="center"
         android:padding="16dp">
@@ -31,13 +31,13 @@
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/h20logo" />
+            app:srcCompat="@drawable/app_logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:fontFamily="@font/inter_bold"
+            android:textStyle="bold"
             android:text="Sign up"
             android:textColor="#000000"
             android:textSize="40sp" />
@@ -47,7 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:fontFamily="@font/inter"
             android:textSize="20sp"
             android:text="Please sign up to continue" />
 
@@ -62,8 +61,7 @@
                 android:layout_height="wrap_content"
                 android:text="Email"
                 android:textColor="#80000000"
-                android:textSize="18sp"
-                android:fontFamily="@font/inter" />
+                android:textSize="18sp" />
             <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
@@ -89,8 +87,7 @@
                 android:layout_height="wrap_content"
                 android:text="Create Password"
                 android:textColor="#80000000"
-                android:textSize="18sp"
-                android:fontFamily="@font/inter" />
+                android:textSize="18sp" />
             <EditText
                 android:id="@+id/createpassword"
                 android:layout_width="match_parent"
@@ -116,8 +113,7 @@
                 android:layout_height="wrap_content"
                 android:text="Confirm Password"
                 android:textColor="#80000000"
-                android:textSize="18sp"
-                android:fontFamily="@font/inter" />
+                android:textSize="18sp" />
             <EditText
                 android:id="@+id/confirmpassword"
                 android:layout_width="match_parent"
@@ -133,17 +129,15 @@
         </LinearLayout>
 
 
+
         <Button
             android:id="@+id/signup_button"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@color/black"
-            android:background="@drawable/signup_button_background"
+            android:backgroundTint="#4579FF"
             android:text="Sign up"
-            android:fontFamily="@font/inter"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:textColor="#FFFFFF" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -154,14 +148,12 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter"
                 android:text="Already have an account? "
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/sign_in_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_bold"
                 android:text="Sign in"
                 android:textStyle="bold"
                 android:textSize="14sp" />

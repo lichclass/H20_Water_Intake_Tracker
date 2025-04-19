@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.shysoftware.h20tracker.R;
 
+
 public class SignUpActivity extends AppCompatActivity {
 
     @Override
