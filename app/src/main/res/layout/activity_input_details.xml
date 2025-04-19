@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:gravity="center_horizontal"
+    tools:context=".views.SignInActivity">
+
+    <!-- Top Blue Bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#3A7BF4" />
+
+    <!-- Wrapped content with padding -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="679dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="0dp"
+            android:contentDescription="App Icon"
+            android:src="@drawable/app_logo" />
+
+        <!-- Log in Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="Input Details"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="Please fill in this form to create an account"
+            android:textColor="#555555"
+            android:textSize="14sp" />
+
+        <!-- Username -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            >
+
+            <!-- Username Label -->
+            <TextView
+                android:layout_width="307dp"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <!-- Username Input -->
+            <EditText
+                android:id="@+id/usernameEditText"
+                android:layout_width="330dp"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bg"
+                android:hint=""
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="13dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999" />
+
+        </LinearLayout>
+
+        <!-- Address -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <!-- Address Label -->
+            <TextView
+                android:layout_width="307dp"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <!-- Address Dropdown -->
+            <Spinner
+                android:id="@+id/addressDropdown"
+                android:layout_width="330dp"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bg"
+                android:paddingHorizontal="13dp"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <!-- Height & Weight -->
+
+        <LinearLayout
+            android:layout_width="349dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- Height Field with Cm -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Height"
+                    android:textColor="#999999"
+                    android:textSize="16sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edittext_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start"
+                        android:gravity="center"
+                        android:text="Cm"
+                        android:paddingStart="10dp"
+                        android:textColor="#999999" />
+
+                    <EditText
+                        android:id="@+id/heightEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint=""
+                        android:inputType="numberDecimal"
+                        android:paddingStart="13dp"
+                        android:paddingEnd="35dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#999999" />
+
+                </FrameLayout>
+            </LinearLayout>
+
+
+            <!-- Weight Field with Kg -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weight"
+                    android:textColor="#999999"
+                    android:textSize="16sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/edittext_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start"
+                        android:gravity="center"
+                        android:text="Kg"
+                        android:paddingStart="10dp"
+                        android:textColor="#999999" />
+
+                    <EditText
+                        android:id="@+id/weightEditText"
+                        android:layout_width="149dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint=""
+                        android:inputType="numberDecimal"
+                        android:paddingStart="13dp"
+                        android:paddingEnd="35dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#999999" />
+
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Date of Birth -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <!-- this can be replaced with a clickable TextView or left for devs to hook up -->
+            <TextView
+                android:id="@+id/dobTextView"
+                android:layout_width="330dp"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bg"
+                android:paddingHorizontal="13dp"
+                android:gravity="center_vertical"
+                android:text="MM/DD/YYYY"
+                android:textColor="#000000"
+                android:textColorHint="#999999" />
+        </LinearLayout>
+
+
+        <!-- Gender -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="307dp"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/genderSpinner"
+                android:layout_width="330dp"
+                android:layout_height="40dp"
+                android:background="@drawable/edittext_bg"
+                android:paddingHorizontal="13dp"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+        <!-- Sign-In Button (unchanged) -->
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#3A7BF4"
+            android:text="Sign-In"
+            android:textColor="#FFFFFF" />
+
+        <!-- Sign Up Prompt -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't have an account? "
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/signUpText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign up"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
