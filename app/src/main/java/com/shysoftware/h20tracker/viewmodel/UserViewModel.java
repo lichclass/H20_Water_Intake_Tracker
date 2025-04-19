@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.shysoftware.h20tracker.model.Rank;
 import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.repository.UserRepository;
 
@@ -122,6 +123,24 @@ public class  UserViewModel extends ViewModel {
                 updateStatus.postValue(response.isSuccessful());
             }
         });
+    }
+
+    public Rank getUserRank(User user){
+        Double xp = user.getXp();
+        Rank rank;
+
+        if(xp <= 50)            rank = Rank.DRIPLET;
+        else if (xp <= 150)     rank = Rank.SIPPER;
+        else if (xp <= 300)     rank = Rank.GULPER;
+        else if (xp <= 500)     rank = Rank.HYDRATION_SEEKER;
+        else if (xp <= 750)     rank = Rank.WATER_WARRIOR;
+        else if (xp <= 1050)    rank = Rank.AQUA_ACHIEVER;
+        else if (xp <= 1400)    rank = Rank.HYDRO_HERO;
+        else if (xp <= 1800)    rank = Rank.OCEAN_GUARDIAN;
+        else if (xp <= 2300)    rank = Rank.LIQUID_LEGEND;
+        else                    rank = Rank.H2OVERLORD;
+
+        return rank;
     }
 }
 
