@@ -18,10 +18,14 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-public class UserViewModel extends ViewModel {
+public class  UserViewModel extends ViewModel {
     private final MutableLiveData<List<User>> users = new MutableLiveData<>();
     private final UserRepository repository = new UserRepository();
 
+    private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>(); //for update status logic, feel free to change this
+    public LiveData<Boolean> getUpdateStatus() {
+        return updateStatus;
+    }
     public LiveData<List<User>> getUsers() {
         return users;
     }
@@ -77,5 +81,48 @@ public class UserViewModel extends ViewModel {
 
         return 0;
     }
+
+    public Integer loginUser(String email, String password) {
+
+        if (email.isEmpty() || password.isEmpty()) {
+            return 1; // Fields empty
+        }
+
+        repository.signInUser(email, password, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.d("SIGN-IN", "Login failed!", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    String responseBody = response.body().string();
+                    Log.d("SIGN-IN", "Success: " + responseBody);
+                    // You can save token from responseBody here
+                } else {
+                    Log.d("SIGN-IN", "Invalid credentials or server error");
+                }
+            }
+        });
+
+        return 0;
+    }
+
+    public void updateUserProfile(User user) { //unsure if works
+        repository.updateUserProfile(user, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                updateStatus.postValue(false);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                updateStatus.postValue(response.isSuccessful());
+            }
+        });
+    }
 }
+
 
