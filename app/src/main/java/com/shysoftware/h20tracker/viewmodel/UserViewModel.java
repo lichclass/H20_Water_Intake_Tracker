@@ -1,6 +1,10 @@
 package com.shysoftware.h20tracker.viewmodel;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -10,9 +14,12 @@ import androidx.lifecycle.ViewModel;
 import com.shysoftware.h20tracker.model.Rank;
 import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.repository.UserRepository;
+import com.shysoftware.h20tracker.views.SignInActivity;
+import com.shysoftware.h20tracker.views.TestActivity;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Handler;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,8 +29,7 @@ import okhttp3.Response;
 public class  UserViewModel extends ViewModel {
     private final MutableLiveData<List<User>> users = new MutableLiveData<>();
     private final UserRepository repository = new UserRepository();
-
-    private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>(); //for update status logic, feel free to change this
+    private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
     public LiveData<Boolean> getUpdateStatus() {
         return updateStatus;
     }
@@ -51,9 +57,16 @@ public class  UserViewModel extends ViewModel {
         });
     }
 
+
+    /**
+     * Register User (Auth, no other personal data)
+     * @param email
+     * @param password
+     * @param confirmPassword
+     * @return
+     */
     public Integer registerUser(String email, String password, String confirmPassword){
 
-        // Gate-keep them hoes
         if(email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
             return 1;
         }
@@ -83,7 +96,14 @@ public class  UserViewModel extends ViewModel {
         return 0;
     }
 
-    public Integer loginUser(String email, String password) {
+
+    /**
+     * Login User Function
+     * @param email
+     * @param password
+     * @return
+     */
+    public Integer loginUser(String email, String password, Context context) {
 
         if (email.isEmpty() || password.isEmpty()) {
             return 1; // Fields empty
@@ -101,9 +121,24 @@ public class  UserViewModel extends ViewModel {
                     assert response.body() != null;
                     String responseBody = response.body().string();
                     Log.d("SIGN-IN", "Success: " + responseBody);
-                    // You can save token from responseBody here
+
+                    new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            context.startActivity(new Intent(context, TestActivity.class));
+                        }
+                    });
+
+                    // Code for saving the tokens in cache (token is in response body)
+
                 } else {
-                    Log.d("SIGN-IN", "Invalid credentials or server error");
+                    new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
             }
         });
@@ -125,6 +160,12 @@ public class  UserViewModel extends ViewModel {
         });
     }
 
+
+    /**
+     * Get User Rank
+     * @param user
+     * @return
+     */
     public Rank getUserRank(User user){
         Double xp = user.getXp();
         Rank rank;
