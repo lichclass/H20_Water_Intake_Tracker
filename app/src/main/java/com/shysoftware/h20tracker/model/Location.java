@@ -40,6 +40,6 @@ public class Location {
     @SuppressLint("DefaultLocale")
     @Override
     public String toString() {
-        return String.format("%s (%.5f, %.5f)", place, latitude, longitude);
+        return String.format("%s", place);
     }
 }

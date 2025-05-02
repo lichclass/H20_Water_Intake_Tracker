@@ -28,54 +28,27 @@ public class UserRepository {
         gson = new Gson();
     }
 
-    public void fetchUsers(Callback callback){
-        Request request = new Request.Builder()
-                .url(BuildConfig.SUPABASE_URL + "/users?select=*")
-                .get()
-                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY )
-                .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
-                .build();
-
-        client.newCall(request).enqueue(callback);
-    }
-
     /**
-     * Forward Geocoding
-     * @param placeName
+     * Auth Registration
+     *
+     * @param email
+     * @param password
      * @param callback
      */
-    public void forwardGeocode(String placeName, Callback callback) {
-        Log.d("FORWARD_GEOCODE", "Place: " + placeName);
-        HttpUrl httpUrl = HttpUrl.parse(
-                        "https://api.mapbox.com/geocoding/v5/mapbox.places/" + Uri.encode(placeName) + ".json"
-                )
-                .newBuilder()
-                .addQueryParameter("access_token", BuildConfig.MAPBOX_TOKEN)
-                .addQueryParameter("autocomplete", "true")
-                .addQueryParameter("limit", "5")
-                .build();
-
-        Request request = new Request.Builder()
-                .url(httpUrl)
-                .build();
-
-        client.newCall(request).enqueue(callback);
-    }
-
     public void signUpUser(String email, String password, Callback callback){
 
-        // Storing email and password in a json
+        // 1. Store in Json
         JsonObject json = new JsonObject();
         json.addProperty("email", email);
         json.addProperty("password", password);
 
-        // Encapsulating them in a request body
+        // 2. Encapsulate
         RequestBody body = RequestBody.create(
                 gson.toJson(json),
                 MediaType.parse("application/json")
         );
 
-       // Preparing the Complete URL
+       // 3. Preparation
         Request request = new Request.Builder()
                 .url(BuildConfig.SUPABASE_AUTH_URL + "/signup")
                 .post(body)
@@ -83,23 +56,31 @@ public class UserRepository {
                 .addHeader("Content-Type", "application/json")
                 .build();
 
-        // Actual API call
+        // Enqueue async call
         client.newCall(request).enqueue(callback);
     }
 
+    /**
+     * Auth login
+     *
+     * @param email
+     * @param password
+     * @param callback
+     */
     public void signInUser(String email, String password, Callback callback) {
-        // Create JSON payload
+
+        // 1. Store in Json
         JsonObject json = new JsonObject();
         json.addProperty("email", email);
         json.addProperty("password", password);
 
-        // Build request body
+        // 2. Encapsulation
         RequestBody body = RequestBody.create(
                 gson.toJson(json),
                 MediaType.parse("application/json")
         );
 
-        // Build request for Supabase login endpoint
+        // 3. Preparation
         Request request = new Request.Builder()
                 .url(BuildConfig.SUPABASE_AUTH_URL + "/token?grant_type=password")
                 .post(body)
@@ -111,42 +92,71 @@ public class UserRepository {
         client.newCall(request).enqueue(callback);
     }
 
-    // To be Tested
+    /**
+     * Complete User Details Back-end
+     *
+     * @param user
+     * @param callback
+     */
     public void createUserProfile(User user, Callback callback) {
-        OkHttpClient client = new OkHttpClient();
 
-        String json = new Gson().toJson(user);
-        RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+        // 1. Store in Json
+        JsonObject payload = new JsonObject();
+        payload.addProperty("user_id",       user.getUserId());
+        payload.addProperty("username",      user.getUsername());
+        payload.addProperty("location_lat",  user.getLocationLat());
+        payload.addProperty("location_long", user.getLocationLong());
+        payload.addProperty("address",       user.getAddress());
+        payload.addProperty("date_of_birth", user.getDateOfBirth().toString());
+        payload.addProperty("height",        user.getHeight());
+        payload.addProperty("weight",        user.getWeight());
+        payload.addProperty("gender",        user.getGender().getValue());
 
-        Request request = new Request.Builder()
-                .url(BuildConfig.SUPABASE_AUTH_URL + "/users")
-                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
-                .addHeader("Content-Type", "application/json")
-                .post(body)
-                .build();
-
-        client.newCall(request).enqueue(callback);
-    }
-
-
-    public void updateUserProfile(User user, Callback callback) {
-        JsonObject json = new JsonObject();
-
-        json.addProperty("username", user.getUsername());
-        json.addProperty("address", user.getAddress()); // if only city is needed, extract it
-
-        // Note: Will add longitude and latitude
-
-        json.addProperty("height", user.getHeight());
-        json.addProperty("weight", user.getWeight());
-        json.addProperty("dateOfBirth", user.getDateOfBirth().toString()); // ISO format
-        json.addProperty("gender", user.getGender().toString()); // assuming enum with values like MALE/FEMALE
-
+        // 2. Encapsulation
         RequestBody body = RequestBody.create(
-                gson.toJson(json),
+                gson.toJson(payload),
                 MediaType.parse("application/json")
         );
 
+        // 3. Preparation
+        Request request = new Request.Builder()
+                .url(BuildConfig.SUPABASE_URL + "/users")
+                .post(body)
+                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        // Enqueue async call
+        client.newCall(request).enqueue(callback);
+    }
+
+    /**
+     * Update user details back-end
+     *
+     * @param user
+     * @param callback
+     */
+    public void updateUserProfile(User user, Callback callback) {
+
+        // 1. Store in Json
+        JsonObject payload = new JsonObject();
+        payload.addProperty("user_id",       user.getUserId());
+        payload.addProperty("username",      user.getUsername());
+        payload.addProperty("location_lat",  user.getLocationLat());
+        payload.addProperty("location_long", user.getLocationLong());
+        payload.addProperty("address",       user.getAddress());
+        payload.addProperty("date_of_birth", user.getDateOfBirth().toString());
+        payload.addProperty("height",        user.getHeight());
+        payload.addProperty("weight",        user.getWeight());
+        payload.addProperty("gender",        user.getGender().getValue());
+
+        // 2. Encapsulation
+        RequestBody body = RequestBody.create(
+                gson.toJson(payload),
+                MediaType.parse("application/json")
+        );
+
+        // 3. Preparation
         Request request = new Request.Builder()
                 .url(BuildConfig.SUPABASE_AUTH_URL + "/rest/v1/users?id=eq." + user.getUserId())
                 .patch(body) // Or PUT, depending on Supabase setup
@@ -154,12 +164,61 @@ public class UserRepository {
                 .addHeader("Content-Type", "application/json")
                 .build();
 
+        // Enqueue async call
         client.newCall(request).enqueue(callback);
     }
-    public List<User> parseUserResponse(String json) {
-        Type listType = new TypeToken<List<User>>(){}.getType();
-        return gson.fromJson(json, listType);
+
+    /**
+     * Back-end for checking if a profile exists for a certain user
+     *
+     * @param userId
+     * @param callback
+     */
+    public void isProfileExist(String userId, Callback callback) {
+
+        // Preparation
+        HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/users")
+                .newBuilder()
+                .addQueryParameter("select", "user_id")
+                .addQueryParameter("user_id", "eq." + userId)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
+                .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
+                .build();
+
+        // Enqueue async call
+        client.newCall(request).enqueue(callback);
     }
 
+    /**
+     * Forward Geocoding given an address name
+     *
+     * @param placeName
+     * @param callback
+     */
+    public void forwardGeocode(String placeName, Callback callback) {
+
+        // Preparation
+        HttpUrl httpUrl = HttpUrl.parse(
+                        "https://api.mapbox.com/geocoding/v5/mapbox.places/"
+                                + Uri.encode(placeName) + ".json"
+                )
+                .newBuilder()
+                .addQueryParameter("access_token", BuildConfig.MAPBOX_TOKEN)
+                .addQueryParameter("autocomplete", "true")
+                .addQueryParameter("limit", "5")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(httpUrl)
+                .build();
+
+        // Enqueue async call
+        client.newCall(request).enqueue(callback);
+    }
 
 }
