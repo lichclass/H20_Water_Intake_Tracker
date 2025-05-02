@@ -7,18 +7,27 @@
     android:layout_height="match_parent"
     tools:context=".views.TestActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="20dp">
 
     <TextView
-        android:id="@+id/test_res"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sign-in Success!"/>
+        android:text="Forward Geocode Test"
+        android:gravity="center"
+        android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/test_msg"
-        android:layout_width="wrap_content"
+    <AutoCompleteTextView
+        android:id="@+id/location_input"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="NOTE: This is only a placeholder for all test related"/>
+        android:hint="Search Location"
+        android:inputType="text"
+        android:completionThreshold="1"
+        android:dropDownWidth="match_parent"
+        android:dropDownHeight="wrap_content"
+        android:popupBackground="@android:color/white"
+        android:layout_margin="16dp"/>
+
 
 </LinearLayout>

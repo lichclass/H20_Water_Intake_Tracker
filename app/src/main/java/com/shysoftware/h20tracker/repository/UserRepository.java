@@ -1,5 +1,8 @@
 package com.shysoftware.h20tracker.repository;
 
+import android.net.Uri;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -10,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -30,6 +34,29 @@ public class UserRepository {
                 .get()
                 .addHeader("apikey", BuildConfig.SUPABASE_API_KEY )
                 .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    /**
+     * Forward Geocoding
+     * @param placeName
+     * @param callback
+     */
+    public void forwardGeocode(String placeName, Callback callback) {
+        Log.d("FORWARD_GEOCODE", "Place: " + placeName);
+        HttpUrl httpUrl = HttpUrl.parse(
+                        "https://api.mapbox.com/geocoding/v5/mapbox.places/" + Uri.encode(placeName) + ".json"
+                )
+                .newBuilder()
+                .addQueryParameter("access_token", BuildConfig.MAPBOX_TOKEN)
+                .addQueryParameter("autocomplete", "true")
+                .addQueryParameter("limit", "5")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(httpUrl)
                 .build();
 
         client.newCall(request).enqueue(callback);
@@ -84,11 +111,32 @@ public class UserRepository {
         client.newCall(request).enqueue(callback);
     }
 
+    // To be Tested
+    public void createUserProfile(User user, Callback callback) {
+        OkHttpClient client = new OkHttpClient();
+
+        String json = new Gson().toJson(user);
+        RequestBody body = RequestBody.create(json, MediaType.get("application/json"));
+
+        Request request = new Request.Builder()
+                .url(BuildConfig.SUPABASE_AUTH_URL + "/users")
+                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+
     public void updateUserProfile(User user, Callback callback) {
         JsonObject json = new JsonObject();
 
         json.addProperty("username", user.getUsername());
         json.addProperty("address", user.getAddress()); // if only city is needed, extract it
+
+        // Note: Will add longitude and latitude
+
         json.addProperty("height", user.getHeight());
         json.addProperty("weight", user.getWeight());
         json.addProperty("dateOfBirth", user.getDateOfBirth().toString()); // ISO format

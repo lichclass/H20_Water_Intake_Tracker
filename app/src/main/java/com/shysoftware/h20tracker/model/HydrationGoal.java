@@ -9,15 +9,17 @@ public class HydrationGoal {
     Double basisWeight;
     Double basisHumidity;
     Double basisTemp;
+    ZonedDateTime forecastDate;
     ZonedDateTime createdAt;
 
-    public HydrationGoal(Integer goalId, String userId, Double targetAmountMl, Double basisWeight, Double basisHumidity, Double basisTemp, ZonedDateTime createdAt) {
+    public HydrationGoal(Integer goalId, String userId, Double targetAmountMl, Double basisWeight, Double basisHumidity, Double basisTemp, ZonedDateTime forecastDate, ZonedDateTime createdAt) {
         this.goalId = goalId;
         this.userId = userId;
         this.targetAmountMl = targetAmountMl;
         this.basisWeight = basisWeight;
         this.basisHumidity = basisHumidity;
         this.basisTemp = basisTemp;
+        this.forecastDate = forecastDate;
         this.createdAt = createdAt;
     }
 

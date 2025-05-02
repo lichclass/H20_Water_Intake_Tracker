@@ -69,9 +69,10 @@
             <EditText
                 android:id="@+id/usernameEditText"
                 android:layout_width="330dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:background="@drawable/edittext_bg"
-                android:hint=""
+                android:hint="Enter Username"
+                android:textSize="14sp"
                 android:inputType="textEmailAddress"
                 android:paddingHorizontal="13dp"
                 android:textColor="#000000"
@@ -96,12 +97,18 @@
                 android:textSize="16sp" />
 
             <!-- Address Dropdown -->
-            <Spinner
+            <AutoCompleteTextView
                 android:id="@+id/addressDropdown"
                 android:layout_width="330dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
+                android:hint="Search Location..."
                 android:background="@drawable/edittext_bg"
                 android:paddingHorizontal="13dp"
+                android:textSize="14sp"
+                android:completionThreshold="1"
+                android:dropDownWidth="match_parent"
+                android:dropDownHeight="wrap_content"
+                android:popupBackground="@android:color/white"
                 android:spinnerMode="dropdown" />
 
         </LinearLayout>
@@ -128,23 +135,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Height"
+                    android:text="Height (cm)"
                     android:textColor="#999999"
                     android:textSize="16sp" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/edittext_bg">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:gravity="center"
-                        android:text="Cm"
-                        android:paddingStart="10dp"
-                        android:textColor="#999999" />
 
                     <EditText
                         android:id="@+id/heightEditText"
@@ -152,8 +150,9 @@
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
                         android:gravity="center_vertical"
-                        android:hint=""
                         android:inputType="numberDecimal"
+                        android:hint="Enter height"
+                        android:textSize="14sp"
                         android:paddingStart="13dp"
                         android:paddingEnd="35dp"
                         android:textColor="#000000"
@@ -175,23 +174,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Weight"
+                    android:text="Weight (kg)"
                     android:textColor="#999999"
                     android:textSize="16sp" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/edittext_bg">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:gravity="center"
-                        android:text="Kg"
-                        android:paddingStart="10dp"
-                        android:textColor="#999999" />
 
                     <EditText
                         android:id="@+id/weightEditText"
@@ -199,8 +189,9 @@
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
                         android:gravity="center_vertical"
-                        android:hint=""
+                        android:hint="Enter weight"
                         android:inputType="numberDecimal"
+                        android:textSize="14sp"
                         android:paddingStart="13dp"
                         android:paddingEnd="35dp"
                         android:textColor="#000000"
@@ -226,16 +217,20 @@
                 android:textSize="16sp" />
 
             <!-- this can be replaced with a clickable TextView or left for devs to hook up -->
-            <TextView
+            <EditText
                 android:id="@+id/dobTextView"
                 android:layout_width="330dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:background="@drawable/edittext_bg"
                 android:paddingHorizontal="13dp"
                 android:gravity="center_vertical"
-                android:text="MM/DD/YYYY"
+                android:focusable="false"
+                android:clickable="true"
+                android:hint="Select date of birth"
                 android:textColor="#000000"
+                android:textSize="16sp"
                 android:textColorHint="#999999" />
+
         </LinearLayout>
 
 
@@ -257,20 +252,21 @@
             <Spinner
                 android:id="@+id/genderSpinner"
                 android:layout_width="330dp"
-                android:layout_height="40dp"
+                android:layout_height="50dp"
                 android:background="@drawable/edittext_bg"
                 android:paddingHorizontal="13dp"
-                android:spinnerMode="dropdown" />
+                />
+
         </LinearLayout>
 
-        <!-- Sign-In Button (unchanged) -->
+        <!-- Sign-up Button (unchanged) -->
         <Button
             android:id="@+id/signInButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:backgroundTint="#3A7BF4"
-            android:text="Sign-In"
+            android:text="Sign-up"
             android:textColor="#FFFFFF" />
 
         <!-- Sign Up Prompt -->
@@ -295,6 +291,7 @@
                 android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

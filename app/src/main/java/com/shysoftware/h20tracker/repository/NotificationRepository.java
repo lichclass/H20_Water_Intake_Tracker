@@ -12,4 +12,11 @@ public class NotificationRepository {
         client = new OkHttpClient();
         gson = new Gson();
     }
+
+
+    // CRUD Operations
+    public void create(){}
+    public void read(){}
+    public void update(){}
+    public void delete(){}
 }
