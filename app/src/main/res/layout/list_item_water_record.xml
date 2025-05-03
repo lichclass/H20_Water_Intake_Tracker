@@ -1,0 +1,57 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:gravity="center_vertical">
+
+    <!--
+    This layout represents a single record item in a list, displaying water consumption details.
+    connected sa activity_modify_modal
+-->
+
+    <!-- Settings Icon (Left) -->
+    <ImageView
+        android:id="@+id/settings_icon"
+        android:layout_width="69dp"
+        android:layout_height="59dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/modify_button" />
+
+    <!-- Record Text -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:paddingHorizontal="8dp">
+
+        <!-- Recorded water amount -->
+        <TextView
+            android:id="@+id/record_water_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You drank 100mL"
+            android:textColor="#000"
+            android:textSize="20sp" />
+
+        <!-- recorded time -->
+        <TextView
+            android:id="@+id/record_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1hr ago"
+            android:textColor="#000"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Delete Icon (Right) -->
+    <ImageView
+        android:id="@+id/delete_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:paddingRight="10dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/delete_minus_button" />
+</LinearLayout>
