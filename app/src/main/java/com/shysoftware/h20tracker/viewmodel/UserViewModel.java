@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,13 @@ public class  UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
     private final MutableLiveData<Boolean> profileExists = new MutableLiveData<>();
     private final MutableLiveData<List<Location>> geocodingResults = new MutableLiveData<>();
+    private final MutableLiveData<List<User>> topUsers = new MutableLiveData<>();
     private static final String PREFS_NAME    = "user_prefs";
     private static final String KEY_USER_ID   = "user_id";
 
+    public LiveData<List<User>> getTopUsers() {
+        return topUsers;
+    }
     public LiveData<Boolean> getProfileExists() {
         return profileExists;
     }
@@ -341,6 +346,36 @@ public class  UserViewModel extends ViewModel {
         });
     }
 
+
+    public void topUsers(){
+        userRepository.fetchTopUsers(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("TOP_USERS", "Failed to fetch: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    try {
+                        Gson gson = new Gson();
+                        Type listType = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
+                        List<User> users = gson.fromJson(responseBody, listType);
+
+                        // Post to LiveData on main thread
+                        new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                            topUsers.setValue(users);
+                        });
+                    } catch (Exception e) {
+                        Log.e("TOP_USERS", "JSON parse error", e);
+                    }
+                } else {
+                    Log.w("TOP_USERS", "Response not successful: " + response.code());
+                }
+            }
+        });
+    }
 }
 
 
