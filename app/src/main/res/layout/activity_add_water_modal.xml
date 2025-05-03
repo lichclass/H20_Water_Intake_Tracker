@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:alpha="0.7">
+
+    <LinearLayout
+        android:layout_width="249dp"
+        android:layout_height="191dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/modal_background"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="16dp"
+            android:text="Add Water"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Decrement Button -->
+            <Button
+                android:id="@+id/decrementButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:text="-"
+                android:backgroundTint="#4373F0"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:padding="0dp" />
+
+
+
+            <!-- Typeable Field -->
+            <EditText
+                android:id="@+id/waterAmountInput"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/edittext_border"
+                android:gravity="center"
+                android:hint="0"
+                android:inputType="number" />
+
+            <!-- Increment Button -->
+            <Button
+                android:id="@+id/incrementButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#4373F0"
+                android:padding="0dp"
+                android:text="+"
+                android:textColor="@android:color/white"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Cancel and Add Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- Cancel Buttons -->
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="Cancel"
+                android:textSize="15dp"
+                android:textColor="#808080"
+                android:textStyle="bold" />
+
+            <!-- Save Buttons -->
+            <Button
+                android:id="@+id/addButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save"
+                android:textSize="15dp"
+                android:backgroundTint="#4373F0"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
