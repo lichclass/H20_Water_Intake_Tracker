@@ -1,5 +1,6 @@
 package com.shysoftware.h20tracker.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 title = "Profile";
             } else if (id == R.id.nav_logout) {
                 finish();
+                startActivity(new Intent(MainActivity.this, SignInActivity.class));
             }
 
             if (selectedFragment != null) {

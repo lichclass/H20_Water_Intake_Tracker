@@ -261,7 +261,7 @@
 
         <!-- Sign-up Button (unchanged) -->
         <Button
-            android:id="@+id/signInButton"
+            android:id="@+id/signUpButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="20dp"

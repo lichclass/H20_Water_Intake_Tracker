@@ -39,6 +39,9 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public User() {
+    }
+
     public String getUserId() {
         return userId;
     }
