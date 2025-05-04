@@ -128,8 +128,6 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-
-
         <Button
             android:id="@+id/signup_button"
             android:layout_width="match_parent"

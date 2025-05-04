@@ -48,7 +48,7 @@ public class DashboardFragment extends Fragment {
                         selected = new HomeFragment();
                         break;
                     case 1:
-                        selected = new ChallengesFragment();
+                        selected = new LeaderboardsFragment();
                         break;
                 }
 

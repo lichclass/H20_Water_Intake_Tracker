@@ -1,6 +1,7 @@
 package com.shysoftware.h20tracker.views;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -41,33 +42,10 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Sign up button event
         signUpBtn.setOnClickListener(v -> {
-            String email = emailField.getText().toString();
-            String createPassword = createPasswordField.getText().toString();
+            String email           = emailField.getText().toString().trim();
+            String createPassword  = createPasswordField.getText().toString();
             String confirmPassword = confirmPasswordField.getText().toString();
-
-            Log.d("SIGN UP ACTIVITY",
-                    "Email: " + email +
-                        "\nPassword: " + createPassword +
-                            "\nConfirm Password" + confirmPassword
-            );
-
-            Integer result = userViewModel.registerUser(email, createPassword, confirmPassword);
-            String msg;
-
-            switch (result) {
-                case 1:
-                    msg = "Some fields are empty";
-                    break;
-                case 2:
-                    msg = "Passwords are not equal";
-                    break;
-                default:
-                    msg = "Successful Registration!";
-                    break;
-            }
-
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-            Log.d("SIGN UP ACTIVITY", msg);
+            userViewModel.registerUser(this, email, createPassword, confirmPassword);
         });
 
         // Redirect to Sign-in Page
