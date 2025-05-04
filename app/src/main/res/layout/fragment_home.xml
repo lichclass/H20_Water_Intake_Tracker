@@ -181,25 +181,26 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp">
 
-                            <!-- Circular Progress Bar (Approximated) -->
+                            <!-- Circular Progress Bar -->
                             <ProgressBar
                                 android:id="@+id/dailyProgress"
-                                style="@android:style/Widget.ProgressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="50"
+                                android:progress="80"
                                 android:max="100"
-                                android:progressTint="#4A90E2"
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/circular_progress"
                                 android:layout_gravity="center"/>
+
 
                             <!-- Smiley Icon -->
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_info_details"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/happy_icon"
                                 android:layout_gravity="center"
-                                app:tint="#4A90E2" />
-
+                                app:tint="#BFBFBF" />
                         </FrameLayout>
 
                         <!-- Label -->
@@ -228,21 +229,23 @@
                             <!-- Circular Progress Bar (Approximated) -->
                             <ProgressBar
                                 android:id="@+id/weeklyProgress"
-                                style="@android:style/Widget.ProgressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
                                 android:progress="50"
                                 android:max="100"
-                                android:progressTint="#8BC34A"
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/circular_progress"
                                 android:layout_gravity="center"/>
+
 
                             <!-- Smiley Icon -->
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_info_details"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/neutral_icon"
                                 android:layout_gravity="center"
-                                app:tint="#8BC34A" />
+                                app:tint="#BFBFBF" />
                         </FrameLayout>
 
                         <!-- Label -->
@@ -271,21 +274,22 @@
                             <!-- Circular Progress Bar (Approximated) -->
                             <ProgressBar
                                 android:id="@+id/monthlyProgress"
-                                style="@android:style/Widget.ProgressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="25"
+                                android:progress="50"
                                 android:max="100"
-                                android:progressTint="#26A69A"
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/circular_progress"
                                 android:layout_gravity="center"/>
 
                             <!-- Sad Icon -->
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_info_details"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/sad_icon"
                                 android:layout_gravity="center"
-                                app:tint="#26A69A" />
+                                app:tint="#BFBFBF" />
                         </FrameLayout>
 
                         <!-- Label -->
@@ -332,7 +336,7 @@
                         android:layout_marginTop="4dp"
                         android:text="April 10 2025"
                         android:textColor="#4A90E2"
-                        android:textSize="32sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -364,9 +368,9 @@
 
                         <!-- Temperature Icon -->
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_info_details"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/hot_temp_icon"
                             app:tint="#FF5722" />
 
                         <!-- Temperature Value -->
@@ -390,8 +394,8 @@
 
                         <!-- Weather Icon -->
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:src="@android:drawable/ic_menu_day"
                             app:tint="#FFCA28" />
 
@@ -416,9 +420,9 @@
 
                         <!-- Humidity Icon -->
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_info_details"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/humidity_icon"
                             app:tint="#4A90E2" />
 
                         <!-- Humidity Value -->
