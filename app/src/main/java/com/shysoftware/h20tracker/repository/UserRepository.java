@@ -45,4 +45,21 @@ public class UserRepository {
         // Execute the request asynchronously
         client.newCall(request).enqueue(callback);
     }
+
+    public void fetchUser(String userId, Callback callback) {
+        HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/users")
+                .newBuilder()
+                .addQueryParameter("select", "*")
+                .addQueryParameter("user_id", "eq." + userId)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
+                .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
 }

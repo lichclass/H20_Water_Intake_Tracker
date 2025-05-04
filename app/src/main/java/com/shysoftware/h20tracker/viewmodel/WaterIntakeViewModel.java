@@ -26,41 +26,53 @@ import okhttp3.Response;
 public class WaterIntakeViewModel extends ViewModel {
     private final WaterIntakeRepository waterIntakeRepository = new WaterIntakeRepository();
     private final MutableLiveData<Double> todayIntake = new MutableLiveData<>();
-    public LiveData<Double> getProgress(User user) {
-        waterIntakeRepository.getTodayProgress(user, new Callback() {
+
+    public LiveData<Double> getTodayIntake(){ return todayIntake; }
+
+    /**
+     * Gets Today's Progress of a User
+     *
+     * @param user
+     * @return
+     */
+    public void getProgress(User user) {
+        waterIntakeRepository.getTodayProgress(user.getUserId(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("PROGRESS", "Failed to fetch intake: " + e.getMessage());
-                todayIntake.postValue(-1.0); // Error signal
+                todayIntake.postValue(0.00);
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.d("WATER INTAKE", response.toString());
                 if (response.isSuccessful() && response.body() != null) {
                     String body = response.body().string();
 
                     try {
                         JSONArray array = new JSONArray(body);
-                        double totalIntake = 0.0;
+                        double total = 0.00;
 
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
-                            totalIntake += obj.optDouble("amount", 0.0);
+                            if (obj.has("amount") && !obj.isNull("amount")) {
+                                total += obj.getDouble("amount");
+                            }
                         }
 
-                        todayIntake.postValue(totalIntake);
+                        Log.d("HYDRATION_PROGRESS", "Total water intake today: " + total);
+                        todayIntake.postValue(total);
 
                     } catch (JSONException e) {
                         Log.e("HYDRATION_PROGRESS", "JSON parsing error", e);
-                        todayIntake.postValue(-1.0); // Optionally indicate parsing error
+                        todayIntake.postValue(0.00);
                     }
                 } else {
                     Log.w("HYDRATION_PROGRESS", "Non-successful response: " + response.code());
-                    todayIntake.postValue(-1.0);
+                    todayIntake.postValue(0.00);
                 }
             }
         });
-
-        return todayIntake;
     }
+
 }

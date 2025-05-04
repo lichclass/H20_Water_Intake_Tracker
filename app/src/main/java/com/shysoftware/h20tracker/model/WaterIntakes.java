@@ -1,16 +1,17 @@
 package com.shysoftware.h20tracker.model;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 public class WaterIntakes {
     Integer intakeId;
     String userId;
     Double amount;
-    ZonedDateTime date;
+    LocalDate date;
     ZonedDateTime createdAt;
     ZonedDateTime updatedAt;
 
-    public WaterIntakes(Integer intakeId, String userId, Double amount, ZonedDateTime date, ZonedDateTime createdAt, ZonedDateTime updatedAt) {
+    public WaterIntakes(Integer intakeId, String userId, Double amount, LocalDate date, ZonedDateTime createdAt, ZonedDateTime updatedAt) {
         this.intakeId = intakeId;
         this.userId = userId;
         this.amount = amount;
@@ -43,11 +44,11 @@ public class WaterIntakes {
         this.amount = amount;
     }
 
-    public ZonedDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(ZonedDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
