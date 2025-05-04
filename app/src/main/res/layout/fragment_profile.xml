@@ -3,13 +3,452 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.ProfileFragment">
+xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".views.ProfileFragment"
+    android:background="#FFFFFF">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Profile"
-        android:gravity="center"/>
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:elevation="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_banner" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="23dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            app:cardBackgroundColor="#F3F3F3"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="0dp" />
+
+    </LinearLayout>
+
+    <!-- pfp -->
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_image"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@drawable/sample_pfp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="120dp"
+        app:shapeAppearanceOverlay="@style/CircleImage"
+        android:elevation="10dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="170dp"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        >
+
+        <!-- profile info -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="48dp"
+            android:padding="24dp"
+            android:orientation="vertical"
+            android:background="@drawable/profile_cardbg"
+            android:elevation="5dp" >
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.04"
+                android:text="John Hydration"
+                android:textSize="24sp"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textColor="#394D81"
+                android:shadowColor="#40000000"
+                android:shadowDy="1"
+                android:shadowRadius="4" />
+
+            <TextView
+                android:id="@+id/rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:letterSpacing="0.03"
+                android:text="Hydro Achiever"
+                android:textSize="12sp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#C4394D81"
+                android:shadowColor="#40000000"
+                android:shadowDy="1"
+                android:shadowRadius="4"
+                />
+
+            <!-- progress bar -->
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12dp"
+                >
+
+                <ProgressBar
+                    android:id="@+id/rankprogress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:progress="50"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_helper"
+                    />
+
+                <TextView
+                    android:id="@+id/progress_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:text="5000XP / 10000XP"
+                    android:textColor="#F3F3F3"
+                    android:textSize="11sp" />
+            </FrameLayout>
+
+            <!-- stats -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!--  Height  -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.03"
+                        android:text="Height"
+                        android:textSize="13sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#92394D81"
+                        />
+
+                    <TextView
+                        android:id="@+id/height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:letterSpacing="0.03"
+                        android:text="121.9cm"
+                        android:textSize="21sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textStyle="bold"
+                        android:textColor="#7A87AA"
+                        android:shadowColor="#40000000"
+                        android:shadowDy="1"
+                        android:shadowRadius="4"
+                        />
+
+                </LinearLayout>
+
+                <!--  BMI  -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.03"
+                        android:text="BMI"
+                        android:textSize="13sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#92394D81"
+                        />
+
+                    <TextView
+                        android:id="@+id/bmi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:letterSpacing="0.03"
+                        android:text="31.1"
+                        android:textSize="21sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textStyle="bold"
+                        android:textColor="#7A87AA"
+                        android:shadowColor="#40000000"
+                        android:shadowDy="1"
+                        android:shadowRadius="4"
+                        />
+
+                </LinearLayout>
+
+                <!--  Weihgt  -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:letterSpacing="0.03"
+                        android:text="Weight"
+                        android:textSize="13sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="#92394D81"
+                        />
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:letterSpacing="0.03"
+                        android:text="45.5kg"
+                        android:textSize="21sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textStyle="bold"
+                        android:textColor="#7A87AA"
+                        android:shadowColor="#40000000"
+                        android:shadowDy="1"
+                        android:shadowRadius="4"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--  Other stats  -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/profile_cardbg"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="65dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:elevation="5dp"
+            >
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="51dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/profile_waterlogged" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:elevation="5dp"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.03"
+                    android:text="Total Water Logged"
+                    android:textSize="13sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#394D81"
+                    android:shadowColor="#40000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    />
+
+                <TextView
+                    android:id="@+id/waterlogged"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:letterSpacing="0.03"
+                    android:text="85, 500 mL"
+                    android:textSize="28sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="#7A87AA"
+                    android:shadowColor="#40000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/profile_cardbg"
+            android:layout_marginTop="7dp"
+            android:layout_marginHorizontal="65dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:elevation="5dp"
+            >
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="51dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:padding="3dp"
+                android:src="@drawable/profile_loginstreak" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:elevation="5dp"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.03"
+                    android:text="Longest Login Streak"
+                    android:textSize="13sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#394D81"
+                    android:shadowColor="#40000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    />
+
+                <TextView
+                    android:id="@+id/loginstreak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:letterSpacing="0.03"
+                    android:text="12 Days"
+                    android:textSize="28sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="#7A87AA"
+                    android:shadowColor="#40000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/profile_cardbg"
+            android:layout_marginTop="7dp"
+            android:layout_marginHorizontal="65dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:elevation="5dp"
+            >
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="51dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:src="@drawable/profile_dailyintake" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:elevation="5dp"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.03"
+                    android:text="Average Daily Intake"
+                    android:textSize="13sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="#394D81"
+                    android:shadowColor="#40000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    />
+
+                <TextView
+                    android:id="@+id/dailyintake"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:letterSpacing="0.03"
+                    android:text="2, 100 mL"
+                    android:textSize="28sp"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"
+                    android:textColor="#7A87AA"
+                    android:shadowColor="#40000000"
+                    android:shadowDy="1"
+                    android:shadowRadius="4"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/datejoined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.03"
+            android:text="Staying hydrated since April 11, 2025"
+            android:textSize="12sp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#C4394D81"
+            android:shadowColor="#40000000"
+            android:shadowDy="1"
+            android:shadowRadius="4"
+            android:layout_marginTop="20dp"
+            />
+
+    </LinearLayout>
+
+
+
 
 </FrameLayout>
