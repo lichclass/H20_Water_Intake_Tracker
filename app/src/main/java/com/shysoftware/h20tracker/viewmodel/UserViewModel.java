@@ -2,6 +2,7 @@ package com.shysoftware.h20tracker.viewmodel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,215 +12,250 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.shysoftware.h20tracker.model.Gender;
 import com.shysoftware.h20tracker.model.Location;
 import com.shysoftware.h20tracker.model.Rank;
 import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.repository.UserRepository;
-import com.shysoftware.h20tracker.views.SignInActivity;
-import com.shysoftware.h20tracker.views.TestActivity;
+import com.shysoftware.h20tracker.views.InputDetailsActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.logging.Handler;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 public class  UserViewModel extends ViewModel {
-    private final MutableLiveData<List<User>> users = new MutableLiveData<>();
-    private final UserRepository repository = new UserRepository();
+    Gson gson = new Gson();
+    private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> profileExists = new MutableLiveData<>();
+    private final MutableLiveData<List<Location>> geocodingResults = new MutableLiveData<>();
+    private final MutableLiveData<List<User>> topUsers = new MutableLiveData<>();
+    private static final String PREFS_NAME    = "user_prefs";
+    private static final String KEY_USER_ID   = "user_id";
+    private final MutableLiveData<User> currentUser = new MutableLiveData<>();
+
+    public LiveData<List<User>> getTopUsers() {
+        return topUsers;
+    }
+    public LiveData<Boolean> getProfileExists() {
+        return profileExists;
+    }
+    public LiveData<List<Location>> getGeocodingResults() {
+        return geocodingResults;
+    }
     public LiveData<Boolean> getUpdateStatus() {
         return updateStatus;
     }
-    public LiveData<List<User>> getUsers() {
-        return users;
-    }
-    private final MutableLiveData<List<Location>> geocodingResults = new MutableLiveData<>();
-
-    public void loadUsers() {
-        repository.fetchUsers(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("USER_FETCH", "Network error", e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    String json = response.body().string();
-                    Log.d("USER_RAW_JSON", json); // 👈 Add this line
-                    List<User> userList = repository.parseUserResponse(json);
-                    users.postValue(userList);
-                }
-            }
-        });
-    }
-
+    public LiveData<User> getCurrentUser(){ return currentUser; }
 
     /**
-     * Register User (Auth, no other personal data)
+     * Register user, but Email and Password only (For Auth)
+     *
      * @param email
      * @param password
      * @param confirmPassword
      * @return
      */
-    public Integer registerUser(String email, String password, String confirmPassword){
+    public void registerUser(Context context, String email, String password, String confirmPassword) {
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            new android.os.Handler(Looper.getMainLooper()).post(() ->
+                    Toast.makeText(context, "Some fields are empty", Toast.LENGTH_SHORT).show()
+            );
+            return;
+        }
+        if (!password.equals(confirmPassword)) {
+            new android.os.Handler(Looper.getMainLooper()).post(() ->
+                    Toast.makeText(context, "Passwords are not equal", Toast.LENGTH_SHORT).show()
+            );
+            return;
+        }
 
-        if(email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
+        userRepository.signUpUser(email, password, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                new android.os.Handler(Looper.getMainLooper()).post(() ->
+                        Toast.makeText(context, "Sign-up failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String body = response.body() != null ? response.body().string() : "";
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject root = new JSONObject(body);
+                        String newUserId = root.getJSONObject("user").getString("id");
+
+                        // save userId
+                        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                        prefs.edit().putString(KEY_USER_ID, newUserId).apply();
+
+                        new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                            Toast.makeText(context, "Successful Registration!", Toast.LENGTH_SHORT).show();
+                            context.startActivity(new Intent(context, InputDetailsActivity.class));
+                        });
+                    } catch (JSONException e) {
+                        new android.os.Handler(Looper.getMainLooper()).post(() ->
+                                Toast.makeText(context, "Sign-up response parse error", Toast.LENGTH_SHORT).show()
+                        );
+                    }
+                } else {
+                    String toastMsg = "Sign-up failed";
+                    try {
+                        JSONObject err = new JSONObject(body);
+                        if ("user_already_exists".equals(err.optString("error_code"))) {
+                            toastMsg = "Email already exists";
+                        } else {
+                            toastMsg = err.optString("msg", toastMsg);
+                        }
+                    } catch (JSONException ignored) { }
+                    String finalMsg = toastMsg;
+                    new android.os.Handler(Looper.getMainLooper()).post(() ->
+                            Toast.makeText(context, finalMsg, Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }
+        });
+    }
+
+    /**
+     * Sign's in the user
+     *
+     * @param email
+     * @param password
+     */
+    public void loginUser(Context context, String email, String password) {
+        if (email.isEmpty() || password.isEmpty()) {
+            new android.os.Handler(Looper.getMainLooper()).post(() ->
+                    Toast.makeText(context,
+                            "Email and password must not be empty",
+                            Toast.LENGTH_SHORT).show()
+            );
+            return;
+        }
+
+        userRepository.signInUser(email, password, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                new android.os.Handler(Looper.getMainLooper()).post(() ->
+                        Toast.makeText(context,
+                                "Login failed: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show()
+                );
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                String body = response.body() != null ? response.body().string() : "";
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject root    = new JSONObject(body);
+                        JSONObject userObj = root.getJSONObject("user");
+                        String userId      = userObj.getString("id");
+
+                        // save userId
+                        SharedPreferences prefs = context
+                                .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+                        prefs.edit()
+                                .putString(KEY_USER_ID, userId)
+                                .apply();
+
+                        // then check if profile exists
+                        checkProfile(userId);
+                    } catch (JSONException e) {
+                        new android.os.Handler(Looper.getMainLooper()).post(() ->
+                                Toast.makeText(context,
+                                        "Login response parse error",
+                                        Toast.LENGTH_SHORT).show()
+                        );
+                    }
+                } else {
+                    new android.os.Handler(Looper.getMainLooper()).post(() ->
+                            Toast.makeText(context,
+                                    "Incorrect credentials",
+                                    Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }
+        });
+    }
+
+    /**
+     * Completes the Registration of the user
+     *
+     * @param user
+     * @return
+     */
+    public Integer completeSignUp(User user) {
+
+        // Validate fields
+        if (    user.getUserId()                == null ||
+                user.getUsername().isEmpty()            ||
+                user.getAddress()               == null ||
+                user.getDateOfBirth()           == null ||
+                user.getLocationLat()           == null ||
+                user.getLocationLong()          == null ||
+                user.getHeight()                == null ||
+                user.getWeight()                == null ||
+                user.getGender()                == null )
+        {
             return 1;
         }
 
-        if(!password.equals(confirmPassword)){
-            return 2;
-        }
-
-        repository.signUpUser(email, password, new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.d("SIGN-UP", "Sign-up failed!", e);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    String responseBody = response.body().string();
-                    Log.d("SIGN-UP", "Success: " + responseBody);
-                } else {
-                    Log.d("SIGN-UP", "An error has occurred!");
-                }
-            }
-        });
-
-        return 0;
-    }
-
-
-    /**
-     * Login User Function
-     * @param email
-     * @param password
-     * @return
-     */
-    public Integer loginUser(String email, String password, Context context) {
-
-        if (email.isEmpty() || password.isEmpty()) {
-            return 1; // Fields empty
-        }
-
-        repository.signInUser(email, password, new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.d("SIGN-IN", "Login failed!", e);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    String responseBody = response.body().string();
-                    Log.d("SIGN-IN", "Success: " + responseBody);
-
-                    new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            context.startActivity(new Intent(context, TestActivity.class));
-                        }
-                    });
-
-                    // Code for saving the tokens in cache (token is in response body)
-
-                } else {
-                    new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(context, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
-            }
-        });
-
-        return 0;
-    }
-
-    // To be Tested
-    public Integer completeSignUp(
-            String userId,
-            String username,
-            Double latitude,
-            Double longitude,
-            String address,
-            LocalDate dateOfBirth,
-            Double height,
-            Double weight,
-            Gender gender
-    ) {
-        // Validate fields
-        if (    username.isEmpty() || latitude == null || longitude == null ||
-                address.isEmpty() || dateOfBirth == null || height == null ||
-                weight == null || gender == null) {
-            return 1; // naay kuwang or Fields or letters missing
-        }
-
-        User user = new User(
-                null, // UserID  added
-                username,
-                latitude,
-                longitude,
-                address,
-                dateOfBirth,
-                height,
-                weight,
-                gender,
-                0,      // initial streaks
-                0.0,    // initial XPs
-                Rank.DRIPLET, // default rank thinies
-                null    // updatedAt handled by backends
-        );
-
         // Save additional profile info to Supabase
-        repository.createUserProfile(user, new Callback() {
+        userRepository.createUserProfile(user, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("PROFILE-CREATE", "Failed to create profile", e);
+                updateStatus.postValue(false);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Log.d("PROFILE-CREATE", "Profile created successfully");
-                } else {
-                    Log.d("PROFILE-CREATE", "Failed to create profile: " + response.message());
-                }
+                String resp = response.body() != null ? response.body().string() : "<empty>";
+                Log.d("PROFILE-CREATE", "HTTP " + response.code() + " → " + resp);
+                updateStatus.postValue(response.isSuccessful());
             }
         });
 
         return 0;
     }
 
-
-    public void searchAddress(String address) {
-        repository.forwardGeocode(address, new Callback() {
+    public void updateUserProfile(User user) { //unsure if works
+        userRepository.updateUserProfile(user, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("FORWARD_GEOCODING",
-                        "Network error: " + e.getClass().getSimpleName() + " – " + e.getMessage(),
-                        e);
+                updateStatus.postValue(false);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                updateStatus.postValue(response.isSuccessful());
+            }
+        });
+    }
+
+    /**
+     * Given a string, it searches for matching addresses via Forward geocoding
+     *
+     * @param address
+     */
+    public void searchAddress(String address) {
+        userRepository.forwardGeocode(address, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("FORWARD_GEOCODING", "Network error: ");
             }
 
             @Override
@@ -247,8 +283,6 @@ public class  UserViewModel extends ViewModel {
                             suggestions.add(location);
                         }
 
-                        Log.d("GEOCODE_SUGGESTIONS", suggestions.toString());
-
                         // Post back on the main thread
                         new android.os.Handler(Looper.getMainLooper()).post(() -> {
                             geocodingResults.setValue(suggestions);
@@ -262,28 +296,9 @@ public class  UserViewModel extends ViewModel {
         });
     }
 
-    public LiveData<List<Location>> getGeocodingResults() {
-        return geocodingResults;
-    }
-
-
-    public void updateUserProfile(User user) { //unsure if works
-        repository.updateUserProfile(user, new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                updateStatus.postValue(false);
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                updateStatus.postValue(response.isSuccessful());
-            }
-        });
-    }
-
-
     /**
      * Get User Rank
+     *
      * @param user
      * @return
      */
@@ -303,6 +318,114 @@ public class  UserViewModel extends ViewModel {
         else                    rank = Rank.H2OVERLORD;
 
         return rank;
+    }
+
+    /**
+     * Checks the db if a users data already exists (the details, not the auth)
+     *
+     * @param userId
+     */
+    public void checkProfile(String userId) {
+        userRepository.isProfileExist(userId, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                profileExists.postValue(false);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body() != null ? response.body().string() : "<empty>";
+                boolean exists = false;
+                if (response.isSuccessful()) {
+                    try {
+                        JSONArray arr = new JSONArray(body);
+                        exists = arr.length() > 0;
+                    } catch (JSONException e) {
+                        //
+                    }
+                }
+                profileExists.postValue(exists);
+            }
+        });
+    }
+
+
+    public void getUser(String userId){
+        userRepository.fetchUser(userId, new Callback() {
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    assert response.body() != null;
+                    String responseBody = response.body().string();
+
+                    try {
+                        JSONArray data = new JSONArray(responseBody);
+                        if (data.length() > 0) {
+                            JSONObject userJson = data.getJSONObject(0);
+                            User user = new User();
+
+                            user.setUserId(userJson.getString("user_id"));
+                            user.setUsername(userJson.getString("username"));
+                            user.setLocationLat(userJson.getDouble("location_lat"));
+                            user.setLocationLong(userJson.getDouble("location_long"));
+                            user.setAddress(userJson.getString("address"));
+                            user.setDateOfBirth(LocalDate.parse(userJson.getString("date_of_birth").substring(0, 10)));
+                            user.setHeight(userJson.getDouble("height"));
+                            user.setWeight(userJson.getDouble("weight"));
+                            user.setGender(Gender.fromValue(userJson.getString("gender")));
+                            user.setStreak(userJson.getInt("streak"));
+                            user.setXp(userJson.getDouble("xp"));
+                            user.setRank(Rank.fromValue(userJson.getString("rank")));
+
+                            new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                                currentUser.setValue(user);
+                            });
+                        }
+                    } catch (JSONException e) {
+                        Log.e("GET_USER", "JSON parse error", e);
+                    }
+                } else {
+                    Log.e("GET_USER", "Failed with code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("GET_USER", "Fetch failed: " + e.getMessage());
+            }
+        });
+    }
+
+
+    public void topUsers(){
+        userRepository.fetchTopUsers(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("TOP_USERS", "Failed to fetch: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    try {
+                        Gson gson = new Gson();
+                        Type listType = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
+                        List<User> users = gson.fromJson(responseBody, listType);
+
+                        // Post to LiveData on main thread
+                        new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                            topUsers.setValue(users);
+                        });
+                    } catch (Exception e) {
+                        Log.e("TOP_USERS", "JSON parse error", e);
+                    }
+                } else {
+                    Log.w("TOP_USERS", "Response not successful: " + response.code());
+                }
+            }
+        });
     }
 }
 

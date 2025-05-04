@@ -1,24 +1,31 @@
 package com.shysoftware.h20tracker.model;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 public class WeatherData {
     Integer weatherId;
     String userId;
     Double temperatureC;
-    Double humidityPercent;
+    Integer humidityPercent;
     WeatherCondition weatherCondition;
+    LocalDate date;
     ZonedDateTime createdAt;
     ZonedDateTime updatedAt;
 
-    public WeatherData(Integer weatherId, String userId, Double temperatureC, Double humidityPercent, WeatherCondition weatherCondition, ZonedDateTime createdAt, ZonedDateTime updatedAt) {
+    public WeatherData(Integer weatherId, String userId, Double temperatureC, Integer humidityPercent, WeatherCondition weatherCondition, LocalDate date, ZonedDateTime createdAt, ZonedDateTime updatedAt) {
         this.weatherId = weatherId;
         this.userId = userId;
         this.temperatureC = temperatureC;
         this.humidityPercent = humidityPercent;
         this.weatherCondition = weatherCondition;
+        this.date = date;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public WeatherData(){
+        //
     }
 
     public Integer getWeatherId() {
@@ -45,11 +52,11 @@ public class WeatherData {
         this.temperatureC = temperatureC;
     }
 
-    public Double getHumidityPercent() {
+    public Integer getHumidityPercent() {
         return humidityPercent;
     }
 
-    public void setHumidityPercent(Double humidityPercent) {
+    public void setHumidityPercent(Integer humidityPercent) {
         this.humidityPercent = humidityPercent;
     }
 
@@ -59,6 +66,14 @@ public class WeatherData {
 
     public void setWeatherCondition(WeatherCondition weatherCondition) {
         this.weatherCondition = weatherCondition;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public ZonedDateTime getCreatedAt() {

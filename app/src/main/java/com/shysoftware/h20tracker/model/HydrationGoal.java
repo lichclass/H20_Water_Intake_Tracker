@@ -1,5 +1,6 @@
 package com.shysoftware.h20tracker.model;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 public class HydrationGoal {
@@ -7,12 +8,12 @@ public class HydrationGoal {
     String userId;
     Double targetAmountMl;
     Double basisWeight;
-    Double basisHumidity;
+    Integer basisHumidity;
     Double basisTemp;
-    ZonedDateTime forecastDate;
+    LocalDate forecastDate;
     ZonedDateTime createdAt;
 
-    public HydrationGoal(Integer goalId, String userId, Double targetAmountMl, Double basisWeight, Double basisHumidity, Double basisTemp, ZonedDateTime forecastDate, ZonedDateTime createdAt) {
+    public HydrationGoal(Integer goalId, String userId, Double targetAmountMl, Double basisWeight, Integer basisHumidity, Double basisTemp, LocalDate forecastDate, ZonedDateTime createdAt) {
         this.goalId = goalId;
         this.userId = userId;
         this.targetAmountMl = targetAmountMl;
@@ -21,6 +22,10 @@ public class HydrationGoal {
         this.basisTemp = basisTemp;
         this.forecastDate = forecastDate;
         this.createdAt = createdAt;
+    }
+
+    public HydrationGoal() {
+        //
     }
 
     public Integer getGoalId() {
@@ -55,11 +60,11 @@ public class HydrationGoal {
         this.basisWeight = basisWeight;
     }
 
-    public Double getBasisHumidity() {
+    public Integer getBasisHumidity() {
         return basisHumidity;
     }
 
-    public void setBasisHumidity(Double basisHumidity) {
+    public void setBasisHumidity(Integer basisHumidity) {
         this.basisHumidity = basisHumidity;
     }
 
@@ -69,6 +74,14 @@ public class HydrationGoal {
 
     public void setBasisTemp(Double basisTemp) {
         this.basisTemp = basisTemp;
+    }
+
+    public LocalDate getForecastDate() {
+        return forecastDate;
+    }
+
+    public void setForecastDate(LocalDate forecastDate) {
+        this.forecastDate = forecastDate;
     }
 
     public ZonedDateTime getCreatedAt() {

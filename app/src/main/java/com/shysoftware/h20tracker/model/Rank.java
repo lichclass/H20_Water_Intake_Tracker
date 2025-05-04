@@ -20,4 +20,13 @@ public enum Rank {
     public String getValue() {
         return value;
     }
+
+    public static Rank fromValue(String value) {
+        for (Rank rank : Rank.values()) {
+            if (rank.value.equalsIgnoreCase(value)) {
+                return rank;
+            }
+        }
+        throw new IllegalArgumentException("Unknown gender: " + value);
+    }
 }

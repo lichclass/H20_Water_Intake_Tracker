@@ -11,16 +11,16 @@ import android.view.ViewGroup;
 
 import com.shysoftware.h20tracker.R;
 
-public class ChallengesFragment extends Fragment {
+public class LeaderboardsFragment extends Fragment {
 
-    public ChallengesFragment() {
+    public LeaderboardsFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_challenges, container, false);
+        return inflater.inflate(R.layout.fragment_leaderboards, container, false);
     }
 
     @Override

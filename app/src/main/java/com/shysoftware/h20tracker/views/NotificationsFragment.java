@@ -28,5 +28,6 @@ public class NotificationsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /* ------------------ Place All View Logic Here ------------------ */
+
     }
 }
