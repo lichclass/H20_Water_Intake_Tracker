@@ -36,6 +36,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class  UserViewModel extends ViewModel {
+    Gson gson = new Gson();
     private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
     private final MutableLiveData<Boolean> profileExists = new MutableLiveData<>();
@@ -43,6 +44,7 @@ public class  UserViewModel extends ViewModel {
     private final MutableLiveData<List<User>> topUsers = new MutableLiveData<>();
     private static final String PREFS_NAME    = "user_prefs";
     private static final String KEY_USER_ID   = "user_id";
+    private final MutableLiveData<User> currentUser = new MutableLiveData<>();
 
     public LiveData<List<User>> getTopUsers() {
         return topUsers;
@@ -56,6 +58,7 @@ public class  UserViewModel extends ViewModel {
     public LiveData<Boolean> getUpdateStatus() {
         return updateStatus;
     }
+    public LiveData<User> getCurrentUser(){ return currentUser; }
 
     /**
      * Register user, but Email and Password only (For Auth)
@@ -342,6 +345,54 @@ public class  UserViewModel extends ViewModel {
                     }
                 }
                 profileExists.postValue(exists);
+            }
+        });
+    }
+
+
+    public void getUser(String userId){
+        userRepository.fetchUser(userId, new Callback() {
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    assert response.body() != null;
+                    String responseBody = response.body().string();
+
+                    try {
+                        JSONArray data = new JSONArray(responseBody);
+                        if (data.length() > 0) {
+                            JSONObject userJson = data.getJSONObject(0);
+                            User user = new User();
+
+                            user.setUserId(userJson.getString("user_id"));
+                            user.setUsername(userJson.getString("username"));
+                            user.setLocationLat(userJson.getDouble("location_lat"));
+                            user.setLocationLong(userJson.getDouble("location_long"));
+                            user.setAddress(userJson.getString("address"));
+                            user.setDateOfBirth(LocalDate.parse(userJson.getString("date_of_birth").substring(0, 10)));
+                            user.setHeight(userJson.getDouble("height"));
+                            user.setWeight(userJson.getDouble("weight"));
+                            user.setGender(Gender.fromValue(userJson.getString("gender")));
+                            user.setStreak(userJson.getInt("streak"));
+                            user.setXp(userJson.getDouble("xp"));
+                            user.setRank(Rank.fromValue(userJson.getString("rank")));
+
+                            new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                                currentUser.setValue(user);
+                            });
+                        }
+                    } catch (JSONException e) {
+                        Log.e("GET_USER", "JSON parse error", e);
+                    }
+                } else {
+                    Log.e("GET_USER", "Failed with code: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("GET_USER", "Fetch failed: " + e.getMessage());
             }
         });
     }

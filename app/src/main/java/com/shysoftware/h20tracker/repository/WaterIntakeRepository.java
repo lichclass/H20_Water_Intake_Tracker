@@ -24,8 +24,7 @@ public class WaterIntakeRepository {
         gson = new Gson();
     }
 
-    public void getTodayProgress(User user, Callback callback){ //return progress of the day
-        String userId = user.getUserId();
+    public void getTodayProgress(String userId, Callback callback){ //return progress of the day
         String today = LocalDate.now().toString(); // e.g., "2025-05-03". P.S. This does not work before 26
 
         HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/water_intakes")
@@ -42,7 +41,7 @@ public class WaterIntakeRepository {
                 .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
                 .build();
 
-        client.newCall(request).enqueue(callback); // Caller (ViewModel) will parse
+        client.newCall(request).enqueue(callback);
     }
 
 
