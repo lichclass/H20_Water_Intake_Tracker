@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.shysoftware.h20tracker.R;
 
@@ -28,5 +29,9 @@ public class ChallengesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /* ------------------ Place All View Logic Here ------------------ */
+
+        View toolbar = view.findViewById(R.id.toolbar);
+        TextView screenName = toolbar.findViewById(R.id.screen_name);
+        screenName.setText("Leaderboard");
     }
 }
