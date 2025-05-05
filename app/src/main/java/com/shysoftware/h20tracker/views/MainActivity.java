@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+
 import com.google.android.material.navigation.NavigationView;
 import com.shysoftware.h20tracker.R;
 import com.shysoftware.h20tracker.model.HydrationGoal;

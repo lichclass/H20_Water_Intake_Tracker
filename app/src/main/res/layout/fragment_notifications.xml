@@ -19,45 +19,45 @@
 <!--        android:layout_marginTop="64dp"-->
 <!--        android:padding="16dp"-->
 <!--        android:clipToPadding="false" />-->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="64dp"
-        android:padding="16dp">
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="64dp"-->
+<!--        android:padding="16dp">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
 
-            <!-- Reminder -->
-            <include
-                layout="@layout/notification_item_reminder"
-                android:id="@+id/notification_reminder" />
+<!--            &lt;!&ndash; Reminder &ndash;&gt;-->
+<!--            <include-->
+<!--                layout="@layout/notification_item_reminder"-->
+<!--                android:id="@+id/notification_reminder" />-->
 
-            <!-- Challenge Status -->
-            <include
-                layout="@layout/notification_item_challenge"
-                android:id="@+id/notification_challenge" />
+<!--            &lt;!&ndash; Challenge Status &ndash;&gt;-->
+<!--            <include-->
+<!--                layout="@layout/notification_item_challenge"-->
+<!--                android:id="@+id/notification_challenge" />-->
 
-            <!-- Streak -->
-            <include
-                layout="@layout/notification_item_streak"
-                android:id="@+id/notification_streak" />
+<!--            &lt;!&ndash; Streak &ndash;&gt;-->
+<!--            <include-->
+<!--                layout="@layout/notification_item_streak"-->
+<!--                android:id="@+id/notification_streak" />-->
 
-            <!-- Goal Status -->
-            <include
-                layout="@layout/notification_item_goal"
-                android:id="@+id/notification_goal" />
+<!--            &lt;!&ndash; Goal Status &ndash;&gt;-->
+<!--            <include-->
+<!--                layout="@layout/notification_item_goal"-->
+<!--                android:id="@+id/notification_goal" />-->
 
-            <!-- System -->
-            <include
-                layout="@layout/notification_item_system"
-                android:id="@+id/notification_system" />
+<!--            &lt;!&ndash; System &ndash;&gt;-->
+<!--            <include-->
+<!--                layout="@layout/notification_item_system"-->
+<!--                android:id="@+id/notification_system" />-->
 
-        </LinearLayout>
-    </ScrollView>
-/>
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
+<!--/>-->
 
 
 
