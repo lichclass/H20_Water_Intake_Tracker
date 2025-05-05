@@ -27,7 +27,9 @@ public class WaterIntakeViewModel extends ViewModel {
     private final WaterIntakeRepository waterIntakeRepository = new WaterIntakeRepository();
     private final MutableLiveData<Double> todayIntake = new MutableLiveData<>();
 
-    public LiveData<Double> getTodayIntake(){ return todayIntake; }
+    public LiveData<Double> getTodayIntake() {
+        return todayIntake;
+    }
 
     /**
      * Gets Today's Progress of a User
@@ -74,5 +76,5 @@ public class WaterIntakeViewModel extends ViewModel {
             }
         });
     }
-
 }
+

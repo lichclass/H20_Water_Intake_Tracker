@@ -31,8 +31,6 @@ public class HydrationGoalViewModel extends ViewModel {
 
     public void setTodayGoal(User user, WeatherData weatherData) {
         LocalDate today = LocalDate.now();
-        Log.d("HYDRATION GOAL", "Reading hydration goal for user: " + user.getUserId() + " on date: " + today);
-
         hydrationGoalRepository.read(user.getUserId(), today, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -44,7 +42,7 @@ public class HydrationGoalViewModel extends ViewModel {
                 if(response.isSuccessful()){
                     assert response.body() != null;
                     String responseBody = response.body().string();
-                    Log.d("HYDRATION GOAL", "Response received: " + responseBody);
+                    Log.d("HYDRATION GOAL", "Response received");
 
                     try {
                         JSONArray jsonArray = new JSONArray(responseBody);
