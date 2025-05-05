@@ -13,10 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.github.mikephil.charting.data.*;
 
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.shysoftware.h20tracker.R;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class HistoryFragment extends Fragment {
         waterHistory.add(new WaterEntry("1000 mL", "04/09/2025, 8:30 PM"));
 
         // Set up RecyclerView
-        adapter = new HistoryAdapter(waterHistory);
+        adapter = new HistoryAdapter(requireActivity(), waterHistory);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         historyRecyclerView.setAdapter(adapter);
     }
