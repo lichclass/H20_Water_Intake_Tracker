@@ -95,7 +95,7 @@
                                 android:id="@+id/waterGoal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1000mL"
+                                android:text="0mL"
                                 android:textColor="#44B3FF"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -113,7 +113,7 @@
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="24dp"
-                                android:progress="50"
+                                android:progress="10"
                                 android:max="100"
                                 android:progressTint="#4A90E2"
                                 android:progressBackgroundTint="#BFC3F7" />
@@ -123,7 +123,7 @@
                                 android:id="@+id/progressText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="500mL / 1000mL"
+                                android:text="0mL / 0mL"
                                 android:textSize="14sp"
                                 android:textColor="#E0E0E0"
                                 android:layout_gravity="center"/>
@@ -181,24 +181,26 @@
                             android:layout_width="80dp"
                             android:layout_height="80dp">
 
-                            <!-- Circular Progress Bar (Approximated) -->
+                            <!-- Circular Progress Bar -->
                             <ProgressBar
                                 android:id="@+id/dailyProgress"
-                                style="@android:style/Widget.ProgressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="50"
+                                android:progress="80"
                                 android:max="100"
-                                android:progressTint="#4A90E2"
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/circular_progress"
                                 android:layout_gravity="center"/>
+
 
                             <!-- Smiley Icon -->
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_info_details"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/happy_icon"
                                 android:layout_gravity="center"
-                                app:tint="#4A90E2" />
+                                app:tint="#BFBFBF" />
                         </FrameLayout>
 
                         <!-- Label -->
@@ -227,21 +229,23 @@
                             <!-- Circular Progress Bar (Approximated) -->
                             <ProgressBar
                                 android:id="@+id/weeklyProgress"
-                                style="@android:style/Widget.ProgressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
                                 android:progress="50"
                                 android:max="100"
-                                android:progressTint="#8BC34A"
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/circular_progress"
                                 android:layout_gravity="center"/>
+
 
                             <!-- Smiley Icon -->
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_info_details"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/neutral_icon"
                                 android:layout_gravity="center"
-                                app:tint="#8BC34A" />
+                                app:tint="#BFBFBF" />
                         </FrameLayout>
 
                         <!-- Label -->
@@ -270,21 +274,22 @@
                             <!-- Circular Progress Bar (Approximated) -->
                             <ProgressBar
                                 android:id="@+id/monthlyProgress"
-                                style="@android:style/Widget.ProgressBar"
+                                style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="25"
+                                android:progress="50"
                                 android:max="100"
-                                android:progressTint="#26A69A"
+                                android:indeterminate="false"
+                                android:progressDrawable="@drawable/circular_progress"
                                 android:layout_gravity="center"/>
 
                             <!-- Sad Icon -->
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:src="@android:drawable/ic_menu_info_details"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/sad_icon"
                                 android:layout_gravity="center"
-                                app:tint="#26A69A" />
+                                app:tint="#BFBFBF" />
                         </FrameLayout>
 
                         <!-- Label -->
@@ -325,15 +330,17 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/date_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="April 10 2025"
                         android:textColor="#4A90E2"
-                        android:textSize="32sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/date_day_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -361,13 +368,14 @@
 
                         <!-- Temperature Icon -->
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_info_details"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/hot_temp_icon"
                             app:tint="#FF5722" />
 
                         <!-- Temperature Value -->
                         <TextView
+                            android:id="@+id/temp_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="26°C"
@@ -386,13 +394,14 @@
 
                         <!-- Weather Icon -->
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:src="@android:drawable/ic_menu_day"
                             app:tint="#FFCA28" />
 
                         <!-- Weather Value -->
                         <TextView
+                            android:id="@+id/weather_cond_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sunny"
@@ -411,13 +420,14 @@
 
                         <!-- Humidity Icon -->
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@android:drawable/ic_menu_info_details"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/humidity_icon"
                             app:tint="#4A90E2" />
 
                         <!-- Humidity Value -->
                         <TextView
+                            android:id="@+id/humidity_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="62%"
@@ -481,8 +491,8 @@
                 <!-- ListView for History Entries -->
                 <ListView
                     android:id="@+id/historyListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="350dp"
+                    android:layout_height="67dp"
                     android:divider="@android:color/darker_gray"
                     android:dividerHeight="1dp" />
             </LinearLayout>

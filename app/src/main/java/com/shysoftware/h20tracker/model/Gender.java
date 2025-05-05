@@ -15,4 +15,13 @@ public enum Gender {
         return value;
     }
 
+    public static Gender fromValue(String value) {
+        for (Gender gender : Gender.values()) {
+            if (gender.value.equalsIgnoreCase(value)) {
+                return gender;
+            }
+        }
+        throw new IllegalArgumentException("Unknown gender: " + value);
+    }
+
 }
