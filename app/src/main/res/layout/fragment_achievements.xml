@@ -155,27 +155,27 @@
 
                     <include
                         layout="@layout/notification_item_achievement"
-                        android:id="@+id/notification_achievement" />
+                        android:id="@+id/notification_achievement_1" />
 
                     <include
                         layout="@layout/notification_item_achievement"
-                        android:id="@+id/notification_achievement" />
+                        android:id="@+id/notification_achievement_2" />
 
                     <include
                         layout="@layout/notification_item_achievement"
-                        android:id="@+id/notification_achievement" />
+                        android:id="@+id/notification_achievement_3" />
 
                     <include
                         layout="@layout/notification_item_achievement"
-                        android:id="@+id/notification_achievement" />
+                        android:id="@+id/notification_achievement_4" />
 
                     <include
                         layout="@layout/notification_item_achievement"
-                        android:id="@+id/notification_achievement" />
+                        android:id="@+id/notification_achievement_5" />
 
                     <include
                         layout="@layout/notification_item_achievement"
-                        android:id="@+id/notification_achievement" />
+                        android:id="@+id/notification_achievement_6" />
 
                 </LinearLayout>
             </ScrollView>

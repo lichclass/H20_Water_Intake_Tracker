@@ -1,11 +1,15 @@
 package com.shysoftware.h20tracker.views;
 
 import com.shysoftware.h20tracker.R;
+
+import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -13,7 +17,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     List<WaterEntry> entries;
 
-    public HistoryAdapter(List<WaterEntry> entries) {
+    public HistoryAdapter(Context ctx, List<WaterEntry> entries) {
         this.entries = entries;
     }
 

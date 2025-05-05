@@ -113,7 +113,7 @@
                                 style="@android:style/Widget.ProgressBar.Horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="24dp"
-                                android:progress="10"
+                                android:progress="0"
                                 android:max="100"
                                 android:progressTint="#4A90E2"
                                 android:progressBackgroundTint="#BFC3F7" />
@@ -187,7 +187,7 @@
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="80"
+                                android:progress="0"
                                 android:max="100"
                                 android:indeterminate="false"
                                 android:progressDrawable="@drawable/circular_progress"
@@ -232,7 +232,7 @@
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="50"
+                                android:progress="0"
                                 android:max="100"
                                 android:indeterminate="false"
                                 android:progressDrawable="@drawable/circular_progress"
@@ -277,7 +277,7 @@
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:progress="50"
+                                android:progress="0"
                                 android:max="100"
                                 android:indeterminate="false"
                                 android:progressDrawable="@drawable/circular_progress"
@@ -334,7 +334,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="April 10 2025"
+                        android:text=""
                         android:textColor="#4A90E2"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -344,7 +344,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Thursday"
+                        android:text=""
                         android:textColor="#000000"
                         android:textSize="15dp"
                         android:paddingLeft="10dp"/>
@@ -378,7 +378,7 @@
                             android:id="@+id/temp_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="26°C"
+                            android:text=""
                             android:textSize="15sp"
                             android:textColor="#000000"
                             android:layout_marginTop="4dp"/>
@@ -394,17 +394,17 @@
 
                         <!-- Weather Icon -->
                         <ImageView
+                            android:id="@+id/weather_icon"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@android:drawable/ic_menu_day"
-                            app:tint="#FFCA28" />
+                            android:src="@android:drawable/ic_menu_day" />
 
                         <!-- Weather Value -->
                         <TextView
                             android:id="@+id/weather_cond_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sunny"
+                            android:text=""
                             android:textSize="15sp"
                             android:textColor="#000000"
                             android:layout_marginTop="4dp"/>
@@ -430,7 +430,7 @@
                             android:id="@+id/humidity_txt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="62%"
+                            android:text=""
                             android:textSize="15sp"
                             android:textColor="#000000"
                             android:layout_marginTop="4dp"/>
@@ -441,7 +441,8 @@
             <!-- History Section (Fourth White Box) -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:padding="16dp"
                 android:background="@drawable/edittext_border"
@@ -466,7 +467,6 @@
                     android:layout_marginTop="8dp"
                     android:background="#E0E0E0">
 
-                    <!-- Water Intake Column Header -->
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -476,12 +476,11 @@
                         android:textStyle="bold"
                         android:textColor="#000000"/>
 
-                    <!-- Date & Time Column Header -->
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Date n Time"
+                        android:text="Date &amp; Time"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="#000000"
@@ -491,11 +490,13 @@
                 <!-- ListView for History Entries -->
                 <ListView
                     android:id="@+id/historyListView"
-                    android:layout_width="350dp"
-                    android:layout_height="67dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:divider="@android:color/darker_gray"
-                    android:dividerHeight="1dp" />
+                    android:dividerHeight="1dp"/>
             </LinearLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

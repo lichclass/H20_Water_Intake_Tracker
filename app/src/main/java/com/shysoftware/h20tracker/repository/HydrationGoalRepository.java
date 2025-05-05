@@ -45,6 +45,7 @@ public class HydrationGoalRepository {
                 .url(BuildConfig.SUPABASE_URL + "/hydration_goals")
                 .post(body)
                 .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
+                .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
                 .addHeader("Content-Type", "application/json")
                 .build();
 

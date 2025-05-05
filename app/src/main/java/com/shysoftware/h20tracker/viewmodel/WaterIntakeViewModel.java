@@ -1,7 +1,5 @@
 package com.shysoftware.h20tracker.viewmodel;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.shysoftware.h20tracker.model.User;
-import com.shysoftware.h20tracker.repository.UserRepository;
+import com.shysoftware.h20tracker.model.WaterIntake;
 import com.shysoftware.h20tracker.repository.WaterIntakeRepository;
 
 import org.json.JSONArray;
@@ -19,6 +17,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 
 import okhttp3.Call;
@@ -27,10 +30,19 @@ import okhttp3.Response;
 public class WaterIntakeViewModel extends ViewModel {
     private final WaterIntakeRepository waterIntakeRepository = new WaterIntakeRepository();
     private final MutableLiveData<Double> todayIntake = new MutableLiveData<>();
+    private final MutableLiveData<Double> weeklyProgress = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> intakeLogged = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> deleteSuccess = new MutableLiveData<>();
+    private final MutableLiveData<Double> monthlyProgress = new MutableLiveData<>();
+    private final MutableLiveData<List<WaterIntake>> intakeList = new MutableLiveData<>();
 
-    public LiveData<Double> getTodayIntake() {
-        return todayIntake;
-    }
+    public LiveData<Boolean> getIntakeLoggedStatus() {return intakeLogged; }
+    public LiveData<Boolean> getDeleteStatus() { return deleteSuccess; }
+    public LiveData<Double> getTodayIntake() { return todayIntake; }
+    public LiveData<Double> getWeeklyProgress() { return weeklyProgress; }
+    public LiveData<Double> getMonthlyProgress() { return monthlyProgress; }
+    public LiveData<List<WaterIntake>> getIntakeList() { return intakeList; }
+
 
     /**
      * Gets Today's Progress of a User
@@ -78,7 +90,51 @@ public class WaterIntakeViewModel extends ViewModel {
         });
     }
 
-    public void getWeeklyProgress(User user, LocalDate today){
+    public void logWater(User user, double amount) {
+        waterIntakeRepository.logWaterIntake(user.getUserId(), amount, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("LOG_WATER", "Failed to log intake: " + e.getMessage());
+
+                intakeLogged.postValue(false);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if(response.isSuccessful()){
+                    getProgress(user);
+                    setMonthlyProgress(user, LocalDate.now());
+                    setWeeklyProgress(user, LocalDate.now());
+                    setWaterIntakeList(user);
+                } else {
+                    intakeLogged.postValue(false);
+                }
+            }
+        });
+    }
+
+    /**
+     * Delete Intake Entry
+     *
+     * @param entryId
+     */
+    public void deleteIntakeEntry(Integer entryId) {
+        waterIntakeRepository.deleteIntakeEntry(entryId, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("DELETE_ENTRY", "Failed to delete: " + e.getMessage());
+                deleteSuccess.postValue(false);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                deleteSuccess.postValue(response.isSuccessful());
+            }
+        });
+    }
+
+
+    public void setWeeklyProgress(User user, LocalDate today){
         waterIntakeRepository.read(user.getUserId(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -96,7 +152,7 @@ public class WaterIntakeViewModel extends ViewModel {
 
                         // Week start is Monday, and week end is today (NOT Sunday)
                         LocalDate weekStart = today.with(java.time.DayOfWeek.MONDAY);
-                        LocalDate weekEnd = today;  // Only up to today, not full Sunday
+                        LocalDate weekEnd = today;
 
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject obj = array.getJSONObject(i);
@@ -114,9 +170,7 @@ public class WaterIntakeViewModel extends ViewModel {
                             }
                         }
 
-                        Log.d("WEEKLY_PROGRESS", "Weekly water intake (Mon to Today): " + weeklyTotal);
-                        // Optional: post to LiveData if needed
-
+                        weeklyProgress.postValue(weeklyTotal);
                     } catch (JSONException e) {
                         Log.e("WEEKLY_PROGRESS", "JSON error", e);
                     }
@@ -126,6 +180,93 @@ public class WaterIntakeViewModel extends ViewModel {
             }
         });
     }
+
+
+    public void setMonthlyProgress(User user, LocalDate today) {
+        waterIntakeRepository.read(user.getUserId(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("MONTHLY_PROGRESS", "Failed to fetch intake: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    double monthlyTotal = 0.00;
+
+                    try {
+                        JSONArray array = new JSONArray(body);
+
+                        LocalDate monthStart = today.withDayOfMonth(1);
+                        LocalDate monthEnd = today;
+
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+
+                            if (obj.has("amount") && !obj.isNull("amount") &&
+                                    obj.has("date") && !obj.isNull("date")) {
+
+                                double amount = obj.getDouble("amount");
+                                LocalDate entryDate = LocalDate.parse(obj.getString("date"));
+
+                                if (!entryDate.isBefore(monthStart) && !entryDate.isAfter(monthEnd)) {
+                                    monthlyTotal += amount;
+                                }
+                            }
+                        }
+
+                        monthlyProgress.postValue(monthlyTotal);
+                    } catch (JSONException e) {
+                        Log.e("MONTHLY_PROGRESS", "JSON error", e);
+                    }
+                } else {
+                    Log.w("MONTHLY_PROGRESS", "Non-successful response: " + response.code());
+                }
+            }
+        });
+    }
+
+
+    public void setWaterIntakeList(User user) {
+        waterIntakeRepository.read(user.getUserId(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("WATER INTAKE LIST", "Failed to fetch intake list: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    List<WaterIntake> intakes = new ArrayList<>();
+                    try {
+                        JSONArray jsonArray = new JSONArray(body);
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+
+                            WaterIntake waterIntake = new WaterIntake();
+                            waterIntake.setIntakeId(obj.getInt("intake_id"));
+                            waterIntake.setUserId(obj.getString("user_id"));
+                            waterIntake.setAmount(obj.getDouble("amount"));
+                            waterIntake.setCreatedAt(ZonedDateTime.parse(obj.getString("created_at")));
+                            waterIntake.setUpdatedAt(ZonedDateTime.parse(obj.getString("updated_at")));
+                            waterIntake.setDate(LocalDate.parse(obj.getString("date")));
+
+                            intakes.add(waterIntake);
+                        }
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    intakeList.postValue(intakes);
+                }
+            }
+        });
+    }
+
+
     public Double computeDailyGoal(User user){
         return user.getWeight() * 35;
     }
@@ -133,8 +274,11 @@ public class WaterIntakeViewModel extends ViewModel {
     public Double computeWeeklyGoal(User user){
         return computeDailyGoal(user) * 7;
     }
-    public Double computeMonthlyGoal(User user){
-        return computeWeeklyGoal(user) * 4;
+    public Double computeMonthlyGoal(User user) {
+        LocalDate today = LocalDate.now();
+        int daysInMonth = YearMonth.from(today).lengthOfMonth();
+        return computeDailyGoal(user) * daysInMonth;
     }
+
 }
 
