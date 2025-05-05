@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 
 import okhttp3.Call;
@@ -75,6 +76,65 @@ public class WaterIntakeViewModel extends ViewModel {
                 }
             }
         });
+    }
+
+    public void getWeeklyProgress(User user, LocalDate today){
+        waterIntakeRepository.read(user.getUserId(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("WEEKLY_PROGRESS", "Failed to fetch intake: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    double weeklyTotal = 0.00;
+
+                    try {
+                        JSONArray array = new JSONArray(body);
+
+                        // Week start is Monday, and week end is today (NOT Sunday)
+                        LocalDate weekStart = today.with(java.time.DayOfWeek.MONDAY);
+                        LocalDate weekEnd = today;  // Only up to today, not full Sunday
+
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject obj = array.getJSONObject(i);
+
+                            if (obj.has("amount") && !obj.isNull("amount") &&
+                                    obj.has("date") && !obj.isNull("date")) {
+
+                                double amount = obj.getDouble("amount");
+                                LocalDate entryDate = LocalDate.parse(obj.getString("date"));
+
+                                // Check if entryDate is within [weekStart, today]
+                                if (!entryDate.isBefore(weekStart) && !entryDate.isAfter(weekEnd)) {
+                                    weeklyTotal += amount;
+                                }
+                            }
+                        }
+
+                        Log.d("WEEKLY_PROGRESS", "Weekly water intake (Mon to Today): " + weeklyTotal);
+                        // Optional: post to LiveData if needed
+
+                    } catch (JSONException e) {
+                        Log.e("WEEKLY_PROGRESS", "JSON error", e);
+                    }
+                } else {
+                    Log.w("WEEKLY_PROGRESS", "Non-successful response: " + response.code());
+                }
+            }
+        });
+    }
+    public Double computeDailyGoal(User user){
+        return user.getWeight() * 35;
+    }
+
+    public Double computeWeeklyGoal(User user){
+        return computeDailyGoal(user) * 7;
+    }
+    public Double computeMonthlyGoal(User user){
+        return computeWeeklyGoal(user) * 4;
     }
 }
 
