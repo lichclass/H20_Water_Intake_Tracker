@@ -198,7 +198,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:src="@drawable/happy_icon"
+                                android:src="@drawable/home_happy_icon"
                                 android:layout_gravity="center"
                                 app:tint="#BFBFBF" />
                         </FrameLayout>
@@ -243,7 +243,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:src="@drawable/neutral_icon"
+                                android:src="@drawable/home_neutral_icon"
                                 android:layout_gravity="center"
                                 app:tint="#BFBFBF" />
                         </FrameLayout>
@@ -287,7 +287,7 @@
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:src="@drawable/sad_icon"
+                                android:src="@drawable/home_sad_icon"
                                 android:layout_gravity="center"
                                 app:tint="#BFBFBF" />
                         </FrameLayout>
@@ -453,10 +453,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="History"
+                    android:text="Recent Entries"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#000000"/>
+
 
                 <!-- Header Row for ListView -->
                 <LinearLayout
@@ -480,7 +481,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Date &amp; Time"
+                        android:text="Date & Time"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="#000000"
