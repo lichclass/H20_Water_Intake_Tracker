@@ -1,19 +1,24 @@
-<!-- res/layout/item_history.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:orientation="horizontal"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/amountText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Amount" />
+        android:text="Amount"
+        android:textColor="#000"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/dateText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Date &amp; Time" />
+        android:text="Date &amp; Time"
+        android:textColor="#000"
+        android:textSize="16sp" />
 </LinearLayout>
