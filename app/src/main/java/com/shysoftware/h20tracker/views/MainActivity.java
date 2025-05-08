@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -14,9 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
 
 import com.google.android.material.navigation.NavigationView;
 import com.shysoftware.h20tracker.R;
@@ -30,74 +26,82 @@ import com.shysoftware.h20tracker.viewmodel.WeatherDataViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME  = "user_prefs";
+    private static final String KEY_USER_ID = "user_id";
+
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageButton navMenuBtn;
-    private TextView screenName;
+    private TextView screenName, usernameTxt, userRankTxt;
+
     private UserViewModel userViewModel;
     private WeatherDataViewModel weatherDataViewModel;
     private HydrationGoalViewModel hydrationGoalViewModel;
     private WaterIntakeViewModel waterIntakeViewModel;
+
     private User user;
     private WeatherData weatherData;
-    private static final String PREFS_NAME  = "user_prefs";
-    private static final String KEY_USER_ID = "user_id";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 1) Bind ALL your UI references up front:
+        drawerLayout   = findViewById(R.id.main);
+        navigationView = findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+        usernameTxt = header.findViewById(R.id.username);
+        userRankTxt  = header.findViewById(R.id.user_role);
+        navMenuBtn     = findViewById(R.id.nav_menu_btn);
+        screenName     = findViewById(R.id.screen_name);
 
-        // |───── Pre-processing Required Data ─────────────────|
+        // 2) Now set up your ViewModels
+        userViewModel         = new ViewModelProvider(this).get(UserViewModel.class);
+        weatherDataViewModel  = new ViewModelProvider(this).get(WeatherDataViewModel.class);
+        hydrationGoalViewModel= new ViewModelProvider(this).get(HydrationGoalViewModel.class);
+        waterIntakeViewModel  = new ViewModelProvider(this).get(WaterIntakeViewModel.class);
 
-        // 0. Pre-requisites
+        // 3) Read prefs & kick off initial data load
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         String userId = prefs.getString(KEY_USER_ID, null);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        weatherDataViewModel = new ViewModelProvider(this).get(WeatherDataViewModel.class);
-        hydrationGoalViewModel = new ViewModelProvider(this).get(HydrationGoalViewModel.class);
-        waterIntakeViewModel = new ViewModelProvider(this).get(WaterIntakeViewModel.class);
-
-        // 1. User and Weather Data
         if (userId != null) {
             userViewModel.getUser(userId);
         }
-        userViewModel.getCurrentUser().observe(this, user -> {
-            if(user != null) {
-                this.user = user; // Storing User Data
-                weatherDataViewModel.setWeatherData(user); // Getting Weather
-                waterIntakeViewModel.getProgress(user); // Getting Water Intake Progress
+
+        // 4) Observe your user → update UI & load dependent data
+        userViewModel.getCurrentUser().observe(this, u -> {
+            if (u != null) {
+                this.user = u;
+                usernameTxt.setText(u.getUsername());
+                userRankTxt.setText(u.getRank().toString());
+
+                // now that we have a user, fetch weather & water progress
+                weatherDataViewModel.setWeatherData(u);
+                waterIntakeViewModel.getProgress(u);
             }
         });
-        weatherDataViewModel.getTodayWeather().observe(this, data -> {
-            if(data != null) {
-                this.weatherData = data;
-                hydrationGoalViewModel.setTodayGoal(user, weatherData);
+
+        // 5) Observe weather → set hydration goal
+        weatherDataViewModel.getTodayWeather().observe(this, w -> {
+            if (w != null && user != null) {
+                hydrationGoalViewModel.setTodayGoal(user, w);
             }
         });
 
-
-
-        // |───── For Fragments ─────────────────|
-        drawerLayout = findViewById(R.id.main);
-        navigationView = findViewById(R.id.nav_view);
-        navMenuBtn = findViewById(R.id.nav_menu_btn);
-        screenName = findViewById(R.id.screen_name);
-
-        // Set default screen
+        // 6) Set default screen on launch
         replaceFragment(new DashboardFragment(), "Dashboard");
 
-        // Menu button opens drawer
-        navMenuBtn.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+        // 7) Menu button opens the drawer
+        navMenuBtn.setOnClickListener(v ->
+                drawerLayout.openDrawer(GravityCompat.START)
+        );
 
-        // Handle nav menu clicks
+        // 8) Handle nav menu item clicks
         navigationView.setNavigationItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            String title = "";
-
             int id = item.getItemId();
+            Fragment selectedFragment;
+            String title;
 
             if (id == R.id.nav_home) {
                 selectedFragment = new DashboardFragment();
@@ -116,17 +120,16 @@ public class MainActivity extends AppCompatActivity {
                 title = "Profile";
             } else if (id == R.id.nav_logout) {
                 finish();
-                startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                startActivity(new Intent(this, SignInActivity.class));
+                return true;
+            } else {
+                return false;  // unhandled
             }
 
-            if (selectedFragment != null) {
-                replaceFragment(selectedFragment, title);
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-
+            replaceFragment(selectedFragment, title);
+            drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
-
     }
 
     private void replaceFragment(Fragment fragment, String title) {
@@ -134,18 +137,15 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-
         screenName.setText(title);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.getOnBackPressedDispatcher().onBackPressed();
+            super.onBackPressed();
         }
     }
-
 }

@@ -9,14 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shysoftware.h20tracker.R;
+import com.shysoftware.h20tracker.model.WaterIntake;
 
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    private List<WaterEntry> entries;
+    private List<WaterIntake> entries;
 
-    public HistoryAdapter(List<WaterEntry> entries) {
+    public HistoryAdapter(List<WaterIntake> entries) {
         this.entries = entries;
     }
 
@@ -40,9 +41,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.ViewHolder holder, int position) {
-        WaterEntry entry = entries.get(position);
-        holder.amountText.setText(entry.amount);
-        holder.dateText.setText(entry.dateTime);
+        WaterIntake entry = entries.get(position);
+        holder.amountText.setText(entry.getAmount().toString());
+        holder.dateText.setText(entry.getDate().toString());
     }
 
     @Override

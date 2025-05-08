@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.shysoftware.h20tracker.R;
+import com.shysoftware.h20tracker.model.WaterIntake;
+import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +26,8 @@ public class HistoryFragment extends Fragment {
     private LineChart chart;
     private RecyclerView historyRecyclerView;
     private HistoryAdapter adapter;
-    private List<WaterEntry> waterHistory;
+    private List<WaterIntake> waterHistory;
+    private WaterIntakeViewModel waterIntakeViewModel;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -38,6 +43,8 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        waterIntakeViewModel = new ViewModelProvider(requireActivity()).get(WaterIntakeViewModel.class);
+
         chart = view.findViewById(R.id.chart);
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView);
 
@@ -49,15 +56,17 @@ public class HistoryFragment extends Fragment {
     private void setupHistory() {
         // Sample water intake history
         waterHistory = new ArrayList<>();
-        waterHistory.add(new WaterEntry("500 mL", "04/09/2025, 11:14 PM"));
-        waterHistory.add(new WaterEntry("7000 mL", "04/09/2025, 10:17 PM"));
-        waterHistory.add(new WaterEntry("250 mL", "04/09/2025, 9:45 PM"));
-        waterHistory.add(new WaterEntry("1000 mL", "04/09/2025, 8:30 PM"));
-
-        // Set up RecyclerView
         adapter = new HistoryAdapter(waterHistory);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         historyRecyclerView.setAdapter(adapter);
+
+        waterIntakeViewModel.getIntakeList().observe(getViewLifecycleOwner(), entries -> {
+            waterHistory.clear();
+            waterHistory.addAll(entries);
+            adapter.notifyDataSetChanged();
+
+            setupChart();
+        });
     }
 
     private void setupChart() {
@@ -65,10 +74,9 @@ public class HistoryFragment extends Fragment {
 
         // Prepare data for chart
         for (int i = 0; i < waterHistory.size(); i++) {
-            WaterEntry entry = waterHistory.get(i);
-            String amountStr = entry.amount.replaceAll("[^\\d.]", "");
-            float amount = Float.parseFloat(amountStr);
-            lineEntries.add(new Entry(i, amount));
+            WaterIntake entry = waterHistory.get(i);
+            Double amount = entry.getAmount();
+            lineEntries.add(new Entry(i, amount.floatValue()));
         }
 
         // Set up LineData
