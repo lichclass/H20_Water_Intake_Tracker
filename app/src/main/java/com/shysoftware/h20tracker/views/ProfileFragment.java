@@ -29,5 +29,9 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /* ------------------ Place All View Logic Here ------------------ */
+
+        View toolbar = view.findViewById(R.id.toolbar);
+        TextView screenName = toolbar.findViewById(R.id.screen_name);
+        screenName.setText("Profile");
     }
 }
