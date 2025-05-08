@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.shysoftware.h20tracker.R;
 
 public class LeaderboardsFragment extends Fragment {
+
+
 
     public LeaderboardsFragment() {
         // Required empty public constructor
@@ -19,7 +22,7 @@ public class LeaderboardsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflating layout
         return inflater.inflate(R.layout.fragment_leaderboards, container, false);
     }
 
@@ -28,5 +31,9 @@ public class LeaderboardsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         /* ------------------ Place All View Logic Here ------------------ */
+
+        View toolbar = view.findViewById(R.id.toolbar);
+        TextView screenName = toolbar.findViewById(R.id.screen_name);
+        screenName.setText("Leaderboard");
     }
 }
