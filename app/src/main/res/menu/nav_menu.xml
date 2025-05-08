@@ -6,19 +6,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:title="Home" />
+            android:title="Home"
+            android:icon="@drawable/side_home" />
         <item
             android:id="@+id/nav_achievements"
-            android:title="Achievements" />
+            android:title="Achievements"
+            android:icon="@drawable/side_achieve"/>
         <item
             android:id="@+id/nav_notifications"
-            android:title="Notifications" />
+            android:title="Notifications"
+            android:icon="@drawable/side_notif"/>
         <item
             android:id="@+id/nav_history"
-            android:title="History" />
+            android:title="History"
+            android:icon="@drawable/side_history"/>
         <item
             android:id="@+id/nav_profile"
-            android:title="Profile" />
+            android:title="Profile"
+            android:icon="@drawable/side_prof"/>
     </group>
 
     <item android:title="" >
