@@ -1,23 +1,22 @@
+// HistoryAdapter.java
 package com.shysoftware.h20tracker.views;
 
-import com.shysoftware.h20tracker.R;
-
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.shysoftware.h20tracker.R;
+
 import java.util.List;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
-    List<WaterEntry> entries;
+    private List<WaterEntry> entries;
 
-    public HistoryAdapter(Context ctx, List<WaterEntry> entries) {
+    public HistoryAdapter(List<WaterEntry> entries) {
         this.entries = entries;
     }
 
@@ -35,10 +34,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     @Override
     public HistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_history, parent, false); // <- Use the right layout here
+                .inflate(R.layout.item_history, parent, false);
         return new ViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull HistoryAdapter.ViewHolder holder, int position) {
