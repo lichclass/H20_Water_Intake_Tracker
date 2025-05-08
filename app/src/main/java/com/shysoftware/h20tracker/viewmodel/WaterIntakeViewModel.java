@@ -116,10 +116,10 @@ public class WaterIntakeViewModel extends ViewModel {
     /**
      * Delete Intake Entry
      *
-     * @param entryId
+     * @param waterIntake
      */
-    public void deleteIntakeEntry(Integer entryId) {
-        waterIntakeRepository.deleteIntakeEntry(entryId, new Callback() {
+    public void deleteIntakeEntry(WaterIntake waterIntake, User currentUser) {
+        waterIntakeRepository.deleteIntakeEntry(waterIntake.getIntakeId(), new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("DELETE_ENTRY", "Failed to delete: " + e.getMessage());
@@ -128,7 +128,11 @@ public class WaterIntakeViewModel extends ViewModel {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                deleteSuccess.postValue(response.isSuccessful());
+                boolean ok = response.isSuccessful();
+                deleteSuccess.postValue(ok);
+                if(ok){
+                    setWaterIntakeList(currentUser);
+                }
             }
         });
     }

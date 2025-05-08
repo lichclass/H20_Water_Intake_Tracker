@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="You drank 100mL"
             android:textColor="#000"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <!-- recorded time -->
         <TextView
@@ -43,15 +43,17 @@
             android:layout_height="wrap_content"
             android:text="1hr ago"
             android:textColor="#000"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <!-- Delete Icon (Right) -->
-    <ImageView
-        android:id="@+id/delete_icon"
+    <ImageButton
+        android:id="@+id/delete_record_btn"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
         android:paddingRight="10dp"
+        android:background="@color/white"
         android:layout_gravity="center_vertical"
         android:src="@drawable/delete_minus_button" />
+
 </LinearLayout>

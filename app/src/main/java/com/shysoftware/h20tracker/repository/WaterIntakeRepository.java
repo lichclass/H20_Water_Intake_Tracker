@@ -72,7 +72,7 @@ public class WaterIntakeRepository {
     public void deleteIntakeEntry(Integer entryId, Callback callback) {
         HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/water_intakes")
                 .newBuilder()
-                .addQueryParameter("id", "eq." + entryId)
+                .addQueryParameter("intake_id", "eq." + entryId)
                 .build();
 
         Request request = new Request.Builder()

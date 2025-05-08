@@ -7,6 +7,8 @@
     import androidx.annotation.NonNull;
     import androidx.fragment.app.Fragment;
     import androidx.lifecycle.ViewModelProvider;
+    import androidx.recyclerview.widget.LinearLayoutManager;
+    import androidx.recyclerview.widget.RecyclerView;
 
     import android.util.Log;
     import android.view.LayoutInflater;
@@ -51,15 +53,17 @@
         // UI Elements
         TextView waterGoalTxt, progressTxt, dateTxt, dateDayTxt, tempTxt, weatherCondTxt, humidityTxt, waterAmountInput;
         ProgressBar progressBar, dailyProgress, weeklyProgress, monthlyProgress;
-        Dialog addWaterModal;
-        ImageButton imageButton;
+        Dialog addWaterModal, deleteWaterModal;
+        ImageButton imageButton, closeBtn, delIntakeBtn;
         Button cancelBtn, addBtn, incrementBtn, decrementBtn;
-        ImageView weatherIcon;
+        ImageView weatherIcon, dailyProgIcon, weeklyProgIcon, monthlyProgIcon;
         ListView historyList;
+        RecyclerView deleteWaterRecyclerView;
 
         // Others
         HomeHistoryAdapter homeHistoryAdapter;
-        List<WaterIntake> historyData;
+        DeleteWaterAdapter deleteWaterAdapter;
+        ArrayList<WaterIntake> historyData;
 
 
         public HomeFragment() {}
@@ -81,6 +85,8 @@
             initViews(view);
             setupObservers();
 
+
+            // Add Water Intake Modal
             imageButton.setOnClickListener(v -> {
                 addWaterModal.show();
                 waterAmountInput.setText("0");
@@ -114,6 +120,16 @@
                 addWaterModal.dismiss();
             });
 
+
+            // Delete Water Intake Modal
+            delIntakeBtn.setOnClickListener(v -> {
+                deleteWaterModal.show();
+            });
+
+            closeBtn.setOnClickListener(v -> {
+                deleteWaterModal.dismiss();
+            });
+
         }
 
 
@@ -123,6 +139,7 @@
             hydrationGoalViewModel = new ViewModelProvider(requireActivity()).get(HydrationGoalViewModel.class);
             waterIntakeViewModel = new ViewModelProvider(requireActivity()).get(WaterIntakeViewModel.class);
             addWaterModal = new Dialog(requireActivity());
+            deleteWaterModal = new Dialog(requireActivity());
         }
 
         private void initViews(View view){
@@ -137,20 +154,33 @@
             tempTxt = view.findViewById(R.id.temp_txt);
             weatherCondTxt = view.findViewById(R.id.weather_cond_txt);
             humidityTxt = view.findViewById(R.id.humidity_txt);
-            imageButton = view.findViewById(R.id.addWaterButton);
-            addWaterModal.setContentView(R.layout.modal_add_water);
             weatherIcon = view.findViewById(R.id.weather_icon);
             historyList = view.findViewById(R.id.historyListView);
+            dailyProgIcon = view.findViewById(R.id.daily_prog_icon);
+            weeklyProgIcon = view.findViewById(R.id.weekly_prog_icon);
+            monthlyProgIcon = view.findViewById(R.id.monthly_prog_icon);
 
             historyData = new ArrayList<>();
             homeHistoryAdapter = new HomeHistoryAdapter(requireActivity(), historyData);
             historyList.setAdapter(homeHistoryAdapter);
 
+            // Add Intake Modal
+            imageButton = view.findViewById(R.id.addWaterButton);
+            addWaterModal.setContentView(R.layout.modal_add_water);
             cancelBtn = addWaterModal.findViewById(R.id.cancelButton);
             addBtn = addWaterModal.findViewById(R.id.addButton);
             incrementBtn = addWaterModal.findViewById(R.id.incrementButton);
             decrementBtn = addWaterModal.findViewById(R.id.decrementButton);
             waterAmountInput = addWaterModal.findViewById(R.id.waterAmountInput);
+
+            // Delete Intake Modal
+            delIntakeBtn = view.findViewById(R.id.modal_del_btn);
+            deleteWaterModal.setContentView(R.layout.modal_delete_water);
+            closeBtn = deleteWaterModal.findViewById(R.id.close_btn);
+            deleteWaterRecyclerView = deleteWaterModal.findViewById(R.id.delete_recycler_view);
+            deleteWaterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+            deleteWaterAdapter = new DeleteWaterAdapter(requireActivity(), historyData, intake -> {waterIntakeViewModel.deleteIntakeEntry(intake, user);});
+            deleteWaterRecyclerView.setAdapter(deleteWaterAdapter);
         }
 
         private void setWeatherDataUI(WeatherData weather){
@@ -203,9 +233,18 @@
                     waterGoalTxt.setText(String.format("%.0f ml", this.hydrationGoal.getTargetAmountMl()));
                 }
             });
+            waterIntakeViewModel.getDeleteStatus().observe(getViewLifecycleOwner(), success -> {
+                if (Boolean.TRUE.equals(success)) {
+                    waterIntakeViewModel.getProgress(user);
+                    waterIntakeViewModel.setWeeklyProgress(user, LocalDate.now());
+                    waterIntakeViewModel.setMonthlyProgress(user, LocalDate.now());
+                    loadHistory();
+                }
+            });
             setProgress();
         }
 
+        @SuppressLint("DefaultLocale")
         private void setProgress(){
             waterIntakeViewModel.getTodayIntake().observe(getViewLifecycleOwner(), progress -> {
                 if(progress != null && hydrationGoal != null && user != null) {
@@ -217,18 +256,21 @@
 
                     double dailyGoalProgPercent = (progress / waterIntakeViewModel.computeDailyGoal(user)) * 100;
                     dailyProgress.setProgress((int)dailyGoalProgPercent);
+                    dailyProgIcon.setImageResource(getProgIcon(dailyGoalProgPercent));
                 }
             });
             waterIntakeViewModel.getWeeklyProgress().observe(getViewLifecycleOwner(), progress -> {
                 if(progress != null && user != null) {
                     double progPercent = (progress / waterIntakeViewModel.computeWeeklyGoal(user)) * 100;
                     weeklyProgress.setProgress((int)progPercent);
+                    weeklyProgIcon.setImageResource(getProgIcon(progPercent));
                 }
             });
             waterIntakeViewModel.getMonthlyProgress().observe(getViewLifecycleOwner(), progress -> {
                 if(progress != null && user != null) {
                     double progPercent = (progress / waterIntakeViewModel.computeMonthlyGoal(user)) * 100;
                     monthlyProgress.setProgress((int)progPercent);
+                    monthlyProgIcon.setImageResource(getProgIcon(progPercent));
                 }
             });
         }
@@ -282,12 +324,21 @@
             }
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         private void loadHistory() {
             waterIntakeViewModel.setWaterIntakeList(user);
             waterIntakeViewModel.getIntakeList().observe(getViewLifecycleOwner(), entries -> {
                 historyData.clear();
                 historyData.addAll(entries);
                 homeHistoryAdapter.notifyDataSetChanged();
+                deleteWaterAdapter.notifyDataSetChanged();
             });
+        }
+
+        private Integer getProgIcon(Double progPercent){
+            if(progPercent == null){ return null; }
+            if(progPercent < 33) return R.drawable.home_sad_icon;
+            else if(progPercent < 66) return R.drawable.home_neutral_icon;
+            else return R.drawable.home_happy_icon;
         }
     }
