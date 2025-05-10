@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -18,6 +20,8 @@ import com.shysoftware.h20tracker.R;
 import com.shysoftware.h20tracker.model.WaterIntake;
 import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +29,7 @@ public class HistoryFragment extends Fragment {
 
     private LineChart chart;
     private RecyclerView historyRecyclerView;
+    TextView historyDateToday;
     private HistoryAdapter adapter;
     private List<WaterIntake> waterHistory;
     private WaterIntakeViewModel waterIntakeViewModel;
@@ -45,8 +50,13 @@ public class HistoryFragment extends Fragment {
 
         waterIntakeViewModel = new ViewModelProvider(requireActivity()).get(WaterIntakeViewModel.class);
 
+        historyDateToday = view.findViewById(R.id.history_date_today);
         chart = view.findViewById(R.id.chart);
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView);
+
+        // Set up history date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+        historyDateToday.setText(LocalDate.now().format(formatter));
 
         // Set up history and chart
         setupHistory();

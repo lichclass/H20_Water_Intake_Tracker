@@ -17,13 +17,10 @@ public class User {
     private Double height;
     private Double weight;
     private Gender gender;
-    private Integer streak;
-    private Double xp;
-    private Rank rank;
     @SerializedName("updatedAt")
     private ZonedDateTime updatedAt;
 
-    public User(String userId, String username, Double locationLat, Double locationLong, String address, LocalDate dateOfBirth, Double height, Double weight, Gender gender, Integer streak, Double xp, Rank rank, ZonedDateTime updatedAt) {
+    public User(String userId, String username, Double locationLat, Double locationLong, String address, LocalDate dateOfBirth, Double height, Double weight, Gender gender, ZonedDateTime updatedAt) {
         this.userId = userId;
         this.username = username;
         this.locationLat = locationLat;
@@ -33,13 +30,11 @@ public class User {
         this.height = height;
         this.weight = weight;
         this.gender = gender;
-        this.streak = streak;
-        this.xp = xp;
-        this.rank = rank;
         this.updatedAt = updatedAt;
     }
 
-    public User() {
+    public User(){
+        //
     }
 
     public String getUserId() {
@@ -112,30 +107,6 @@ public class User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
-    }
-
-    public Integer getStreak() {
-        return streak;
-    }
-
-    public void setStreak(Integer streak) {
-        this.streak = streak;
-    }
-
-    public Double getXp() {
-        return xp;
-    }
-
-    public void setXp(Double xp) {
-        this.xp = xp;
-    }
-
-    public Rank getRank() {
-        return rank;
-    }
-
-    public void setRank(Rank rank) {
-        this.rank = rank;
     }
 
     public ZonedDateTime getUpdatedAt() {

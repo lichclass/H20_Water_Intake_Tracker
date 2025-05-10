@@ -9,10 +9,6 @@
             android:title="Home"
             android:icon="@drawable/side_home" />
         <item
-            android:id="@+id/nav_achievements"
-            android:title="Achievements"
-            android:icon="@drawable/side_achieve"/>
-        <item
             android:id="@+id/nav_notifications"
             android:title="Notifications"
             android:icon="@drawable/side_notif"/>

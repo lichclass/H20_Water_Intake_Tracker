@@ -12,11 +12,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.shysoftware.h20tracker.model.AuthUser;
 import com.shysoftware.h20tracker.model.Gender;
 import com.shysoftware.h20tracker.model.Location;
-import com.shysoftware.h20tracker.model.Rank;
 import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.repository.UserRepository;
 import com.shysoftware.h20tracker.views.InputDetailsActivity;
@@ -26,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,19 +33,19 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class  UserViewModel extends ViewModel {
-    Gson gson = new Gson();
     private final UserRepository userRepository = new UserRepository();
+
     private final MutableLiveData<Boolean> updateStatus = new MutableLiveData<>();
     private final MutableLiveData<Boolean> profileExists = new MutableLiveData<>();
     private final MutableLiveData<List<Location>> geocodingResults = new MutableLiveData<>();
-    private final MutableLiveData<List<User>> topUsers = new MutableLiveData<>();
+    private final MutableLiveData<User> currentUser = new MutableLiveData<>();
+    private final MutableLiveData<AuthUser> authUser = new MutableLiveData<>();
+
+
     private static final String PREFS_NAME    = "user_prefs";
     private static final String KEY_USER_ID   = "user_id";
-    private final MutableLiveData<User> currentUser = new MutableLiveData<>();
 
-    public LiveData<List<User>> getTopUsers() {
-        return topUsers;
-    }
+
     public LiveData<Boolean> getProfileExists() {
         return profileExists;
     }
@@ -59,6 +56,7 @@ public class  UserViewModel extends ViewModel {
         return updateStatus;
     }
     public LiveData<User> getCurrentUser(){ return currentUser; }
+    public LiveData<AuthUser> getAuthUser(){ return authUser; }
 
     /**
      * Register user, but Email and Password only (For Auth)
@@ -232,6 +230,7 @@ public class  UserViewModel extends ViewModel {
         return 0;
     }
 
+
     public void updateUserProfile(User user) { //unsure if works
         userRepository.updateUserProfile(user, new Callback() {
             @Override
@@ -245,6 +244,7 @@ public class  UserViewModel extends ViewModel {
             }
         });
     }
+
 
     /**
      * Given a string, it searches for matching addresses via Forward geocoding
@@ -294,30 +294,6 @@ public class  UserViewModel extends ViewModel {
                 }
             }
         });
-    }
-
-    /**
-     * Get User Rank
-     *
-     * @param user
-     * @return
-     */
-    public Rank getUserRank(User user){
-        Double xp = user.getXp();
-        Rank rank;
-
-        if(xp <= 50)            rank = Rank.DRIPLET;
-        else if (xp <= 150)     rank = Rank.SIPPER;
-        else if (xp <= 300)     rank = Rank.GULPER;
-        else if (xp <= 500)     rank = Rank.HYDRATION_SEEKER;
-        else if (xp <= 750)     rank = Rank.WATER_WARRIOR;
-        else if (xp <= 1050)    rank = Rank.AQUA_ACHIEVER;
-        else if (xp <= 1400)    rank = Rank.HYDRO_HERO;
-        else if (xp <= 1800)    rank = Rank.OCEAN_GUARDIAN;
-        else if (xp <= 2300)    rank = Rank.LIQUID_LEGEND;
-        else                    rank = Rank.H2OVERLORD;
-
-        return rank;
     }
 
     /**
@@ -374,9 +350,6 @@ public class  UserViewModel extends ViewModel {
                             user.setHeight(userJson.getDouble("height"));
                             user.setWeight(userJson.getDouble("weight"));
                             user.setGender(Gender.fromValue(userJson.getString("gender")));
-                            user.setStreak(userJson.getInt("streak"));
-                            user.setXp(userJson.getDouble("xp"));
-                            user.setRank(Rank.fromValue(userJson.getString("rank")));
 
                             new android.os.Handler(Looper.getMainLooper()).post(() -> {
                                 currentUser.setValue(user);
@@ -397,36 +370,6 @@ public class  UserViewModel extends ViewModel {
         });
     }
 
-
-    public void topUsers(){
-        userRepository.fetchTopUsers(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("TOP_USERS", "Failed to fetch: " + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.isSuccessful() && response.body() != null) {
-                    String responseBody = response.body().string();
-                    try {
-                        Gson gson = new Gson();
-                        Type listType = new com.google.gson.reflect.TypeToken<List<User>>(){}.getType();
-                        List<User> users = gson.fromJson(responseBody, listType);
-
-                        // Post to LiveData on main thread
-                        new android.os.Handler(Looper.getMainLooper()).post(() -> {
-                            topUsers.setValue(users);
-                        });
-                    } catch (Exception e) {
-                        Log.e("TOP_USERS", "JSON parse error", e);
-                    }
-                } else {
-                    Log.w("TOP_USERS", "Response not successful: " + response.code());
-                }
-            }
-        });
-    }
 }
 
 

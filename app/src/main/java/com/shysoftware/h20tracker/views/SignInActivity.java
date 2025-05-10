@@ -7,12 +7,7 @@
     import android.widget.EditText;
     import android.widget.TextView;
 
-    import androidx.activity.EdgeToEdge;
     import androidx.appcompat.app.AppCompatActivity;
-    import androidx.core.graphics.Insets;
-    import androidx.core.view.ViewCompat;
-    import androidx.core.view.WindowInsetsCompat;
-    import androidx.lifecycle.ViewModel;
     import androidx.lifecycle.ViewModelProvider;
 
     import com.shysoftware.h20tracker.R;
@@ -24,8 +19,6 @@
         TextView signUpRedirect;
         Button signInButton;
         UserViewModel userViewModel;
-        private static final String PREFS_NAME  = "user_prefs";
-        private static final String KEY_USER_ID = "user_id";
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {

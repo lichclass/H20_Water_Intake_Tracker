@@ -11,7 +11,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/dateText"
+            android:id="@+id/history_date_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="January 25, 2024"

@@ -19,6 +19,10 @@ public class AuthUser {
         this.lastSignInAt = lastSignInAt;
     }
 
+    public AuthUser() {
+        //
+    }
+
     public String getId() {
         return id;
     }

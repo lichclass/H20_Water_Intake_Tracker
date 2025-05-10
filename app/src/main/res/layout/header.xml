@@ -21,20 +21,22 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/header_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="John Hydration"
+            android:text="John"
             android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/user_role"
+            android:id="@+id/header_created_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Intermediate Water Driver"
+            android:text="Hydrated Since April 2019"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_marginTop="4dp" />
+
     </LinearLayout>
 </LinearLayout>

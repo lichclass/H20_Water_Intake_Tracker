@@ -24,6 +24,8 @@ import com.shysoftware.h20tracker.viewmodel.UserViewModel;
 import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
 import com.shysoftware.h20tracker.viewmodel.WeatherDataViewModel;
 
+import java.time.format.DateTimeFormatter;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String PREFS_NAME  = "user_prefs";
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageButton navMenuBtn;
-    private TextView screenName, usernameTxt, userRankTxt;
+    private TextView screenName, headerUsernameTxt, headerCreatedYrTxt;
 
     private UserViewModel userViewModel;
     private WeatherDataViewModel weatherDataViewModel;
@@ -51,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout   = findViewById(R.id.main);
         navigationView = findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
-        usernameTxt = header.findViewById(R.id.username);
-        userRankTxt  = header.findViewById(R.id.user_role);
         navMenuBtn     = findViewById(R.id.nav_menu_btn);
         screenName     = findViewById(R.id.screen_name);
+        headerUsernameTxt = header.findViewById(R.id.header_username);
+        headerCreatedYrTxt = header.findViewById(R.id.header_created_at);
 
         // 2) Now set up your ViewModels
         userViewModel         = new ViewModelProvider(this).get(UserViewModel.class);
@@ -73,8 +75,10 @@ public class MainActivity extends AppCompatActivity {
         userViewModel.getCurrentUser().observe(this, u -> {
             if (u != null) {
                 this.user = u;
-                usernameTxt.setText(u.getUsername());
-                userRankTxt.setText(u.getRank().toString());
+                headerUsernameTxt.setText(u.getUsername());
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+                headerCreatedYrTxt.setText("Hydrated Since ");
 
                 // now that we have a user, fetch weather & water progress
                 weatherDataViewModel.setWeatherData(u);
@@ -106,9 +110,6 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 selectedFragment = new DashboardFragment();
                 title = "Dashboard";
-            } else if (id == R.id.nav_achievements) {
-                selectedFragment = new AchievementsFragment();
-                title = "Achievements";
             } else if (id == R.id.nav_notifications) {
                 selectedFragment = new NotificationsFragment();
                 title = "Notifications";

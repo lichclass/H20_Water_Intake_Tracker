@@ -221,24 +221,6 @@ public class UserRepository {
         client.newCall(request).enqueue(callback);
     }
 
-    public void fetchTopUsers(Callback callback){
-        HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/users")
-                .newBuilder()
-                .addQueryParameter("select", "*")
-                .addQueryParameter("order", "xp.desc")
-                .addQueryParameter("limit", "50")
-                .build();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
-                .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
-                .build();
-
-        client.newCall(request).enqueue(callback);
-    }
-
     public void fetchUser(String userId, Callback callback) {
         HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/users")
                 .newBuilder()

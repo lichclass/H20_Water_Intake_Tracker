@@ -6,59 +6,6 @@
     tools:context=".views.NotificationsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-<!--    <TextView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:text="Notifications"-->
-<!--        android:gravity="center"/>-->
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/recyclerViewNotification"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_marginTop="64dp"-->
-<!--        android:padding="16dp"-->
-<!--        android:clipToPadding="false" />-->
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_marginTop="64dp"-->
-<!--        android:padding="16dp">-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="vertical">-->
-
-<!--            &lt;!&ndash; Reminder &ndash;&gt;-->
-<!--            <include-->
-<!--                layout="@layout/notification_item_reminder"-->
-<!--                android:id="@+id/notification_reminder" />-->
-
-<!--            &lt;!&ndash; Challenge Status &ndash;&gt;-->
-<!--            <include-->
-<!--                layout="@layout/notification_item_challenge"-->
-<!--                android:id="@+id/notification_challenge" />-->
-
-<!--            &lt;!&ndash; Streak &ndash;&gt;-->
-<!--            <include-->
-<!--                layout="@layout/notification_item_streak"-->
-<!--                android:id="@+id/notification_streak" />-->
-
-<!--            &lt;!&ndash; Goal Status &ndash;&gt;-->
-<!--            <include-->
-<!--                layout="@layout/notification_item_goal"-->
-<!--                android:id="@+id/notification_goal" />-->
-
-<!--            &lt;!&ndash; System &ndash;&gt;-->
-<!--            <include-->
-<!--                layout="@layout/notification_item_system"-->
-<!--                android:id="@+id/notification_system" />-->
-
-<!--        </LinearLayout>-->
-<!--    </ScrollView>-->
-<!--/>-->
-
 
 
     <!-- This is the actual RecyclerView -->

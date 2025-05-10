@@ -35,13 +35,14 @@ public class WaterIntakeViewModel extends ViewModel {
     private final MutableLiveData<Boolean> deleteSuccess = new MutableLiveData<>();
     private final MutableLiveData<Double> monthlyProgress = new MutableLiveData<>();
     private final MutableLiveData<List<WaterIntake>> intakeList = new MutableLiveData<>();
+    private final MutableLiveData<Double> totalWaterIntake = new MutableLiveData<>();
 
-    public LiveData<Boolean> getIntakeLoggedStatus() {return intakeLogged; }
     public LiveData<Boolean> getDeleteStatus() { return deleteSuccess; }
     public LiveData<Double> getTodayIntake() { return todayIntake; }
     public LiveData<Double> getWeeklyProgress() { return weeklyProgress; }
     public LiveData<Double> getMonthlyProgress() { return monthlyProgress; }
     public LiveData<List<WaterIntake>> getIntakeList() { return intakeList; }
+    public LiveData<Double> getTotalWaterIntake() { return totalWaterIntake; }
 
 
     /**
@@ -244,6 +245,8 @@ public class WaterIntakeViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     String body = response.body().string();
                     List<WaterIntake> intakes = new ArrayList<>();
+                    Double totalAmount = 0.0;
+
                     try {
                         JSONArray jsonArray = new JSONArray(body);
 
@@ -258,8 +261,11 @@ public class WaterIntakeViewModel extends ViewModel {
                             waterIntake.setUpdatedAt(ZonedDateTime.parse(obj.getString("updated_at")));
                             waterIntake.setDate(LocalDate.parse(obj.getString("date")));
 
+                            totalAmount += waterIntake.getAmount();
                             intakes.add(waterIntake);
                         }
+
+                        totalWaterIntake.postValue(totalAmount);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
