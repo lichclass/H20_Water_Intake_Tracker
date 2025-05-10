@@ -57,6 +57,7 @@ public class DeleteWaterAdapter extends RecyclerView.Adapter<DeleteWaterAdapter.
 
     @Override
     public int getItemCount() {
+        if (waterIntakes == null) return 0;
         return waterIntakes.size();
     }
 

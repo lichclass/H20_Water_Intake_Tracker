@@ -34,14 +34,14 @@ public class WaterIntakeViewModel extends ViewModel {
     private final MutableLiveData<Boolean> intakeLogged = new MutableLiveData<>();
     private final MutableLiveData<Boolean> deleteSuccess = new MutableLiveData<>();
     private final MutableLiveData<Double> monthlyProgress = new MutableLiveData<>();
-    private final MutableLiveData<List<WaterIntake>> intakeList = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<WaterIntake>> intakeList = new MutableLiveData<>();
     private final MutableLiveData<Double> totalWaterIntake = new MutableLiveData<>();
 
     public LiveData<Boolean> getDeleteStatus() { return deleteSuccess; }
     public LiveData<Double> getTodayIntake() { return todayIntake; }
     public LiveData<Double> getWeeklyProgress() { return weeklyProgress; }
     public LiveData<Double> getMonthlyProgress() { return monthlyProgress; }
-    public LiveData<List<WaterIntake>> getIntakeList() { return intakeList; }
+    public LiveData<ArrayList<WaterIntake>> getIntakeList() { return intakeList; }
     public LiveData<Double> getTotalWaterIntake() { return totalWaterIntake; }
 
 
@@ -244,7 +244,7 @@ public class WaterIntakeViewModel extends ViewModel {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
                     String body = response.body().string();
-                    List<WaterIntake> intakes = new ArrayList<>();
+                    ArrayList<WaterIntake> intakes = new ArrayList<>();
                     Double totalAmount = 0.0;
 
                     try {

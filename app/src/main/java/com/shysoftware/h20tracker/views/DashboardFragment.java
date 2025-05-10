@@ -186,6 +186,9 @@ public class DashboardFragment extends Fragment {
         deleteWaterModal.setContentView(R.layout.modal_delete_water);
         closeBtn = deleteWaterModal.findViewById(R.id.close_btn);
         deleteWaterRecyclerView = deleteWaterModal.findViewById(R.id.delete_recycler_view);
+
+        historyData = new ArrayList<>();
+
         deleteWaterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         deleteWaterAdapter = new DeleteWaterAdapter(requireActivity(), historyData, intake -> {waterIntakeViewModel.deleteIntakeEntry(intake, user);});
         deleteWaterRecyclerView.setAdapter(deleteWaterAdapter);
@@ -336,6 +339,8 @@ public class DashboardFragment extends Fragment {
     private void loadHistory() {
         waterIntakeViewModel.setWaterIntakeList(user);
         waterIntakeViewModel.getIntakeList().observe(getViewLifecycleOwner(), entries -> {
+            historyData.clear();
+            historyData.addAll(entries);
             deleteWaterAdapter.notifyDataSetChanged();
         });
     }
