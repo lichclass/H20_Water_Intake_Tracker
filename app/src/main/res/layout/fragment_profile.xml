@@ -8,6 +8,7 @@
     tools:context=".views.ProfileFragment"
     android:background="#FFFFFF">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,8 +41,7 @@
         android:orientation="vertical"
         android:paddingBottom="15dp"
         android:clipChildren="false"
-        android:clipToPadding="false"
-        >
+        android:clipToPadding="false">
 
         <!-- profile info -->
 
@@ -53,6 +53,8 @@
             android:orientation="vertical"
             android:background="@drawable/profile_cardbg"
             android:elevation="5dp" >
+
+
 
             <TextView
                 android:id="@+id/profile_username"
@@ -93,8 +95,7 @@
                         android:text="Height"
                         android:textSize="13sp"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="#92394D81"
-                        />
+                        android:textColor="#92394D81" />
 
                     <TextView
                         android:id="@+id/profile_height"
@@ -109,8 +110,7 @@
                         android:textColor="#7A87AA"
                         android:shadowColor="#40000000"
                         android:shadowDy="1"
-                        android:shadowRadius="4"
-                        />
+                        android:shadowRadius="4" />
 
                 </LinearLayout>
 
@@ -129,8 +129,7 @@
                         android:text="BMI"
                         android:textSize="13sp"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="#92394D81"
-                        />
+                        android:textColor="#92394D81" />
 
                     <TextView
                         android:id="@+id/profile_bmi"
@@ -145,12 +144,11 @@
                         android:textColor="#7A87AA"
                         android:shadowColor="#40000000"
                         android:shadowDy="1"
-                        android:shadowRadius="4"
-                        />
+                        android:shadowRadius="4" />
 
                 </LinearLayout>
 
-                <!--  Weihgt  -->
+                <!--  Weight  -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -165,8 +163,7 @@
                         android:text="Weight"
                         android:textSize="13sp"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="#92394D81"
-                        />
+                        android:textColor="#92394D81" />
 
                     <TextView
                         android:id="@+id/profile_weight"
@@ -181,8 +178,7 @@
                         android:textColor="#7A87AA"
                         android:shadowColor="#40000000"
                         android:shadowDy="1"
-                        android:shadowRadius="4"
-                        />
+                        android:shadowRadius="4" />
 
                 </LinearLayout>
 
@@ -201,8 +197,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="5dp"
             android:paddingVertical="20dp"
-            android:elevation="5dp"
-            >
+            android:elevation="5dp">
 
             <ImageView
                 android:layout_width="51dp"
@@ -230,8 +225,7 @@
                     android:textColor="#394D81"
                     android:shadowColor="#40000000"
                     android:shadowDy="1"
-                    android:shadowRadius="4"
-                    />
+                    android:shadowRadius="4" />
 
                 <TextView
                     android:id="@+id/profile_total_water"
@@ -246,12 +240,10 @@
                     android:textColor="#7A87AA"
                     android:shadowColor="#40000000"
                     android:shadowDy="1"
-                    android:shadowRadius="4"
-                    />
+                    android:shadowRadius="4" />
             </LinearLayout>
 
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -262,8 +254,7 @@
             android:orientation="horizontal"
             android:paddingHorizontal="5dp"
             android:paddingVertical="20dp"
-            android:elevation="5dp"
-            >
+            android:elevation="5dp">
 
             <ImageView
                 android:layout_width="51dp"
@@ -291,8 +282,7 @@
                     android:textColor="#394D81"
                     android:shadowColor="#40000000"
                     android:shadowDy="1"
-                    android:shadowRadius="4"
-                    />
+                    android:shadowRadius="4" />
 
                 <TextView
                     android:id="@+id/profile_avg_water"
@@ -307,8 +297,7 @@
                     android:textColor="#7A87AA"
                     android:shadowColor="#40000000"
                     android:shadowDy="1"
-                    android:shadowRadius="4"
-                    />
+                    android:shadowRadius="4" />
             </LinearLayout>
 
         </LinearLayout>
@@ -326,14 +315,25 @@
             android:shadowColor="#40000000"
             android:shadowDy="1"
             android:shadowRadius="4"
-            android:layout_marginTop="25dp"
-            />
+            android:layout_marginTop="25dp" />
 
         <Button
             android:id="@+id/edit_profile_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit Profile" />
+            android:layout_width="299dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="16dp"
+
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1"
+            android:backgroundTint="#3A7BF4"
+            android:elevation="5dp"
+            android:paddingHorizontal="24dp"
+            android:text="Edit Profile"
+
+            android:textColor="#FFFFFF" /> />
+
 
     </LinearLayout>
 
