@@ -1,17 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.EditProfileActivity"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="#FFFFFF"
+    android:gravity="center"
+    tools:context=".views.InputDetailsActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+
+    <!-- Wrapped content with padding -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Edit Profile Area"/>
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
 
+
+
+        <!-- Log in Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="Edit Profile"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text="Please update your profile information"
+            android:textColor="#555555"
+            android:textSize="14sp" />
+
+        <!-- edit profile image -->
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="0dp"
+            android:src="@drawable/blank_profile"
+            android:layout_margin="10px"
+            android:scaleType="centerCrop"
+            android:background="@drawable/profile_circle_shape"
+            android:clipToOutline="true"
+            android:contentDescription="Edit Profile Image" />
+
+        <!-- Username -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <!-- Username Label -->
+            <TextView
+                android:layout_width="307dp"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <!-- Username Input -->
+            <EditText
+                android:id="@+id/usernameEditText"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="Enter Username"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="13dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Address -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <!-- Address Label -->
+            <TextView
+                android:layout_width="307dp"
+                android:layout_height="wrap_content"
+                android:text="Address"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <!-- Address Dropdown -->
+            <AutoCompleteTextView
+                android:id="@+id/addressDropdown"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:background="@drawable/edittext_bg"
+                android:completionThreshold="1"
+                android:dropDownWidth="match_parent"
+                android:dropDownHeight="wrap_content"
+                android:hint="Search Location..."
+                android:paddingHorizontal="13dp"
+                android:popupBackground="@android:color/white"
+                android:spinnerMode="dropdown"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Height & Weight -->
+
+        <LinearLayout
+            android:layout_width="349dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- Height Field with Cm -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Height (cm)"
+                    android:textColor="#999999"
+                    android:textSize="16sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/edittext_bg">
+
+                    <EditText
+                        android:id="@+id/heightEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint="Enter height"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="13dp"
+                        android:paddingEnd="35dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#999999"
+                        android:textSize="14sp" />
+
+                </FrameLayout>
+            </LinearLayout>
+
+
+            <!-- Weight Field with Kg -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weight (kg)"
+                    android:textColor="#999999"
+                    android:textSize="16sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/edittext_bg">
+
+                    <EditText
+                        android:id="@+id/weightEditText"
+                        android:layout_width="149dp"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint="Enter weight"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="13dp"
+                        android:paddingEnd="35dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#999999"
+                        android:textSize="14sp" />
+
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Date of Birth -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <!-- this can be replaced with a clickable TextView or left for devs to hook up -->
+            <EditText
+                android:id="@+id/dobTextView"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:background="@drawable/edittext_bg"
+                android:clickable="true"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:hint="Select date of birth"
+                android:paddingHorizontal="13dp"
+                android:textColor="#000000"
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+
+        <!-- Gender -->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="307dp"
+                android:layout_height="wrap_content"
+                android:text="Gender"
+                android:textColor="#999999"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/genderSpinner"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:background="@drawable/edittext_bg"
+                android:paddingHorizontal="13dp" />
+
+        </LinearLayout>
+
+        <!-- Sign-up Button (unchanged) -->
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#B0B6C4"
+                android:text="Cancel"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#3A7BF4"
+                android:text="Save"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
