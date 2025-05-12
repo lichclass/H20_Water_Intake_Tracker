@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 headerUsernameTxt.setText(u.getUsername());
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-                headerCreatedYrTxt.setText("Hydrated Since ");
+                headerCreatedYrTxt.setText("Hydrated Since " + u.getCreatedAt().format(formatter));
 
                 // now that we have a user, fetch weather & water progress
                 weatherDataViewModel.setWeatherData(u);

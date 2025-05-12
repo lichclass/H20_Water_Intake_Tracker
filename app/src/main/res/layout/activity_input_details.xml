@@ -222,14 +222,14 @@
                 android:layout_width="330dp"
                 android:layout_height="50dp"
                 android:background="@drawable/edittext_bg"
-                android:paddingHorizontal="13dp"
-                android:gravity="center_vertical"
-                android:focusable="false"
                 android:clickable="true"
+                android:focusable="false"
+                android:gravity="center_vertical"
                 android:hint="Select date of birth"
+                android:paddingHorizontal="13dp"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:textColorHint="#999999" />
+                android:textColorHint="#999999"
+                android:textSize="16sp" />
 
         </LinearLayout>
 

@@ -20,7 +20,9 @@ public class User {
     @SerializedName("updatedAt")
     private ZonedDateTime updatedAt;
 
-    public User(String userId, String username, Double locationLat, Double locationLong, String address, LocalDate dateOfBirth, Double height, Double weight, Gender gender, ZonedDateTime updatedAt) {
+    private LocalDate createdAt;
+
+    public User(String userId, String username, Double locationLat, Double locationLong, String address, LocalDate dateOfBirth, Double height, Double weight, Gender gender, ZonedDateTime updatedAt, LocalDate createdAt) {
         this.userId = userId;
         this.username = username;
         this.locationLat = locationLat;
@@ -31,10 +33,11 @@ public class User {
         this.weight = weight;
         this.gender = gender;
         this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
     }
 
-    public User(){
-        //
+    public User() {
+
     }
 
     public String getUserId() {
@@ -115,5 +118,13 @@ public class User {
 
     public void setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
     }
 }

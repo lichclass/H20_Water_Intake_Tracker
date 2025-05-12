@@ -65,6 +65,8 @@ public class DashboardFragment extends Fragment {
     // Others
     DeleteWaterAdapter deleteWaterAdapter;
     ArrayList<WaterIntake> historyData;
+    List<String> tips;
+    List<String> tipDesc;
 
 
     public DashboardFragment() {}
@@ -112,6 +114,7 @@ public class DashboardFragment extends Fragment {
             if(user != null && amount > 0.00){
                 waterIntakeViewModel.logWater(user, amount);
 
+                waterIntakeViewModel.computeWeeklyAverage(user);
                 waterIntakeViewModel.getProgress(user);
                 waterIntakeViewModel.setWeeklyProgress(user, LocalDate.now());
                 waterIntakeViewModel.setMonthlyProgress(user, LocalDate.now());
@@ -133,18 +136,12 @@ public class DashboardFragment extends Fragment {
 
         ViewPager2 tipsViewPager = view.findViewById(R.id.tipsViewPager);
 
-        List<String> tips = Arrays.asList(
-                "Drink a glass of water after waking up",
-                "Keep a water bottle near you",
-                "Use reminders to stay hydrated",
-                "Eat water-rich fruits like watermelon"
-        );
+        initTipsData();
 
-        TipsAdapter tipsAdapter = new TipsAdapter(tips);
+        TipsAdapter tipsAdapter = new TipsAdapter(tips, tipDesc);
         tipsViewPager.setAdapter(tipsAdapter);
 
     }
-
 
     private void initViewModels(){
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
@@ -226,6 +223,9 @@ public class DashboardFragment extends Fragment {
             if (user != null) {
                 this.user = user;
                 hydrationGoalViewModel.getTodayGoal().observe(getViewLifecycleOwner(), this::onGoalUpdated);
+                waterIntakeViewModel.getDailyIntakeGrouped(user);
+                hydrationGoalViewModel.fetchAllGoals(user.getUserId());
+                waterIntakeViewModel.computeWeeklyAverage(user);
                 trySetGoal();
             }
         });
@@ -350,5 +350,53 @@ public class DashboardFragment extends Fragment {
         if(progPercent < 33) return R.drawable.home_sad_icon;
         else if(progPercent < 66) return R.drawable.home_neutral_icon;
         else return R.drawable.home_happy_icon;
+    }
+
+    private void initTipsData() {
+        this.tips = Arrays.asList(
+                "Your brain runs better on water — sip now for a clearer mind.",
+                "Don’t wait until you're thirsty — that’s already a sign you need water.",
+                "A glass of water can help you feel more awake than a cup of coffee.",
+                "If your lips feel dry, your body’s asking for water.",
+                "Drinking water before meals can help with digestion.",
+                "Clear or light yellow pee = you're doing great with hydration!",
+                "Small sips throughout the day beat one big chug.",
+                "You need more water on hot days — even if you’re just sitting around.",
+                "Hydration helps your skin glow naturally (no filter needed).",
+                "Headache creeping in? Try a glass of water before reaching for meds.",
+                "Your body needs water to turn food into energy.",
+                "Feeling foggy or unfocused? That might be your brain asking for water.",
+                "You lose water when you breathe, sweat, and go to the bathroom — refill regularly.",
+                "Staying hydrated helps your mood stay steady too.",
+                "Dehydration can slow down your metabolism — drink up!",
+                "One sip now is one step toward hitting your goal.",
+                "Hydrated bodies recover faster after workouts — cheers to that!",
+                "Every glass logged is a win — keep going!",
+                "Start your day with water — your body’s been fasting all night.",
+                "Hydration supports your heart, kidneys, and overall health."
+        );
+
+        this.tipDesc = Arrays.asList(
+                "Even mild dehydration (1–2% body weight loss) can impair cognitive performance.",
+                "Thirst is a late indicator; by the time you feel thirsty, you're already dehydrated.",
+                "Dehydration can cause fatigue; rehydrating can improve energy levels.",
+                "Dry mouth and lips are common early signs of dehydration.",
+                "Adequate hydration aids in digestion and nutrient absorption.",
+                "Urine color is a practical indicator of hydration status; pale yellow suggests adequate hydration.",
+                "Consistent water intake maintains hydration better than infrequent large volumes.",
+                "Heat increases water loss through perspiration, necessitating increased intake.",
+                "Proper hydration maintains skin elasticity and appearance.",
+                "Dehydration is a common cause of headaches; rehydration can alleviate symptoms.",
+                "Water is essential for metabolic processes, including energy production.",
+                "Cognitive functions decline with even mild dehydration.",
+                "Daily water loss occurs through various means, requiring regular replenishment.",
+                "Hydration status can influence mood and mental well-being.",
+                "Insufficient water intake can negatively affect metabolic rate.",
+                "Incremental water intake contributes to meeting daily hydration needs.",
+                "Proper hydration aids in muscle recovery and reduces fatigue post-exercise.",
+                "Tracking water intake can improve hydration habits and awareness.",
+                "Drinking water in the morning helps rehydrate the body after sleep.",
+                "Adequate water intake is crucial for cardiovascular and renal functions."
+        );
     }
 }

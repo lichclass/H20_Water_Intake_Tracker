@@ -39,7 +39,6 @@ public class  UserViewModel extends ViewModel {
     private final MutableLiveData<Boolean> profileExists = new MutableLiveData<>();
     private final MutableLiveData<List<Location>> geocodingResults = new MutableLiveData<>();
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
-    private final MutableLiveData<AuthUser> authUser = new MutableLiveData<>();
 
 
     private static final String PREFS_NAME    = "user_prefs";
@@ -56,7 +55,6 @@ public class  UserViewModel extends ViewModel {
         return updateStatus;
     }
     public LiveData<User> getCurrentUser(){ return currentUser; }
-    public LiveData<AuthUser> getAuthUser(){ return authUser; }
 
     /**
      * Register user, but Email and Password only (For Auth)
@@ -350,10 +348,9 @@ public class  UserViewModel extends ViewModel {
                             user.setHeight(userJson.getDouble("height"));
                             user.setWeight(userJson.getDouble("weight"));
                             user.setGender(Gender.fromValue(userJson.getString("gender")));
+                            user.setCreatedAt(LocalDate.parse(userJson.getString("created_at").substring(0, 10)));
 
-                            new android.os.Handler(Looper.getMainLooper()).post(() -> {
-                                currentUser.setValue(user);
-                            });
+                            new android.os.Handler(Looper.getMainLooper()).post(() -> currentUser.setValue(user));
                         }
                     } catch (JSONException e) {
                         Log.e("GET_USER", "JSON parse error", e);

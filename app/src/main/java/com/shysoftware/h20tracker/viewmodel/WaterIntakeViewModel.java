@@ -20,8 +20,10 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 import okhttp3.Call;
@@ -36,6 +38,8 @@ public class WaterIntakeViewModel extends ViewModel {
     private final MutableLiveData<Double> monthlyProgress = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<WaterIntake>> intakeList = new MutableLiveData<>();
     private final MutableLiveData<Double> totalWaterIntake = new MutableLiveData<>();
+    private final MutableLiveData<LinkedHashMap<LocalDate, Double>> dailyGroupedIntake = new MutableLiveData<>();
+    private final MutableLiveData<Double> weeklyAverageIntake = new MutableLiveData<>();
 
     public LiveData<Boolean> getDeleteStatus() { return deleteSuccess; }
     public LiveData<Double> getTodayIntake() { return todayIntake; }
@@ -43,6 +47,8 @@ public class WaterIntakeViewModel extends ViewModel {
     public LiveData<Double> getMonthlyProgress() { return monthlyProgress; }
     public LiveData<ArrayList<WaterIntake>> getIntakeList() { return intakeList; }
     public LiveData<Double> getTotalWaterIntake() { return totalWaterIntake; }
+    public LiveData<LinkedHashMap<LocalDate, Double>> getDailyGroupedIntake() { return dailyGroupedIntake; }
+    public LiveData<Double> getWeeklyAverageIntake() { return weeklyAverageIntake; }
 
 
     /**
@@ -276,7 +282,112 @@ public class WaterIntakeViewModel extends ViewModel {
         });
     }
 
+    public void getDailyIntakeGrouped(User user) {
+        waterIntakeRepository.read(user.getUserId(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("GROUPED_DAILY", "Failed to fetch intake list: " + e.getMessage());
+            }
 
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    LinkedHashMap<LocalDate, Double> grouped = new LinkedHashMap<>();
+
+                    try {
+                        JSONArray jsonArray = new JSONArray(body);
+                        LocalDate earliest = LocalDate.now(); // temp earliest date
+                        LocalDate today = LocalDate.now();
+
+                        // Step 1: Group by date
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+
+                            if (!obj.has("date") || obj.isNull("date")) continue;
+
+                            LocalDate date = LocalDate.parse(obj.getString("date"));
+                            double amount = obj.optDouble("amount", 0.0);
+
+                            if (date.isBefore(earliest)) earliest = date;
+
+                            grouped.put(date, grouped.getOrDefault(date, 0.0) + amount);
+                        }
+
+                        // Step 2: Fill missing dates with 0
+                        LinkedHashMap<LocalDate, Double> filled = new LinkedHashMap<>();
+                        LocalDate date = earliest;
+
+                        while (!date.isAfter(today)) {
+                            filled.put(date, grouped.getOrDefault(date, 0.0));
+                            date = date.plusDays(1);
+                        }
+
+                        dailyGroupedIntake.postValue(filled);
+
+                    } catch (JSONException e) {
+                        Log.e("GROUPED_DAILY", "JSON parse error", e);
+                    }
+                }
+            }
+        });
+    }
+
+
+    public void computeWeeklyAverage(User user) {
+        waterIntakeRepository.read(user.getUserId(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("WEEKLY_AVG", "Failed to fetch intake list: " + e.getMessage());
+                weeklyAverageIntake.postValue(0.0);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (!response.isSuccessful() || response.body() == null) {
+                    weeklyAverageIntake.postValue(0.0);
+                    return;
+                }
+
+                String body = response.body().string();
+                try {
+                    JSONArray arr = new JSONArray(body);
+
+                    // 1) Build a map date → total amount that day
+                    Map<LocalDate, Double> grouped = new LinkedHashMap<>();
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject obj = arr.getJSONObject(i);
+                        LocalDate date = LocalDate.parse(obj.getString("date"));
+                        double amt = obj.optDouble("amount", 0.0);
+                        grouped.put(date, grouped.getOrDefault(date, 0.0) + amt);
+                    }
+
+                    // 2) Walk the past 7 days, summing and counting non-zero days
+                    LocalDate today = LocalDate.now();
+                    LocalDate start = today.minusDays(6);
+                    double sum = 0.0;
+                    int nonZeroDays = 0;
+
+                    for (LocalDate d = start; !d.isAfter(today); d = d.plusDays(1)) {
+                        double v = grouped.getOrDefault(d, 0.0);
+                        sum += v;
+                        if (v > 0) nonZeroDays++;
+                    }
+
+                    // 3) Compute average over only days with intake
+                    double avg = (nonZeroDays > 0) ? (sum / nonZeroDays) : 0.0;
+                    weeklyAverageIntake.postValue(avg);
+
+                } catch (JSONException e) {
+                    Log.e("WEEKLY_AVG", "JSON parse error", e);
+                    weeklyAverageIntake.postValue(0.0);
+                }
+            }
+        });
+    }
+
+
+    // UTILITY FUNCTIONS
     public Double computeDailyGoal(User user){
         return user.getWeight() * 35;
     }

@@ -72,6 +72,22 @@ public class HydrationGoalRepository {
         client.newCall(request).enqueue(callback);
     }
 
-    public void update(){}
-    public void delete(){}
+    public void readAll(String userId, Callback callback) {
+        HttpUrl url = HttpUrl.parse(BuildConfig.SUPABASE_URL + "/hydration_goals")
+                .newBuilder()
+                .addQueryParameter("select", "*")
+                .addQueryParameter("user_id", "eq." + userId)
+                .addQueryParameter("order", "forecast_date.asc")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
+                .addHeader("Authorization", "Bearer " + BuildConfig.SUPABASE_API_KEY)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
 }

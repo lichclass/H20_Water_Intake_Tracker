@@ -1,9 +1,13 @@
 package com.shysoftware.h20tracker.views;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,13 +23,16 @@ import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.viewmodel.UserViewModel;
 import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
 
+import java.time.format.DateTimeFormatter;
+
 public class ProfileFragment extends Fragment {
 
     TextView profileUsername, profileHeight, profileBMI, profileWeight, profileTotalWater, profileAvgWater, profileDateJoined;
     Button editProfileBtn;
     UserViewModel userViewModel;
     WaterIntakeViewModel waterIntakeViewModel;
-    User user;
+
+    private ActivityResultLauncher<Intent> editProfileLauncher;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -57,16 +64,9 @@ public class ProfileFragment extends Fragment {
         waterIntakeViewModel = new ViewModelProvider(requireActivity()).get(WaterIntakeViewModel.class);
 
         userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
-            if(user != null){
-                profileUsername.setText(user.getUsername());
-                profileHeight.setText(String.format("%.1f", user.getHeight()));
-
-                double height_m = user.getHeight() / 100;
-                double bmi = user.getWeight() / (height_m * height_m);
-
-                profileBMI.setText(String.format("%.1f", bmi));
-                profileWeight.setText(String.format("%.1f", user.getWeight()));
-            }
+            if (user == null) return;
+            bindUserData(user);
+            loadIntakeMetrics(user);
         });
 
         waterIntakeViewModel.getTotalWaterIntake().observe(getViewLifecycleOwner(), total -> {
@@ -74,10 +74,41 @@ public class ProfileFragment extends Fragment {
                profileTotalWater.setText(String.format("%.0f mL", total));
            }
         });
-
-        editProfileBtn.setOnClickListener(v -> {
-            startActivity(new Intent(requireActivity(), EditProfileActivity.class));
+        waterIntakeViewModel.getWeeklyAverageIntake().observe(getViewLifecycleOwner(), avg -> {
+            if(avg != null){
+                profileAvgWater.setText(String.format("%.0f mL", avg));
+            }
         });
 
+        editProfileBtn.setOnClickListener(v -> editProfileLauncher.launch(new Intent(requireActivity(), EditProfileActivity.class)));
+
+        editProfileLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", requireActivity().MODE_PRIVATE);
+                        String userId = prefs.getString("user_id", null);
+                        if (userId != null) {
+                            userViewModel.getUser(userId);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void bindUserData(User user) {
+        profileUsername.setText(user.getUsername());
+        profileHeight.setText(String.format("%.1f", user.getHeight()));
+        double hM = user.getHeight() / 100;
+        profileBMI.setText(String.format("%.1f", user.getWeight() / (hM * hM)));
+        profileWeight.setText(String.format("%.1f", user.getWeight()));
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        profileDateJoined.setText("Hydrated since " + user.getCreatedAt().format(fmt));
+    }
+
+    // ➌ Trigger all three fetches
+    private void loadIntakeMetrics(User user) {
+        waterIntakeViewModel.setWaterIntakeList(user);
+        waterIntakeViewModel.computeWeeklyAverage(user);
     }
 }

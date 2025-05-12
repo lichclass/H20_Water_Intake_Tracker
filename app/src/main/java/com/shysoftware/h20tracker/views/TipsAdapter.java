@@ -15,9 +15,11 @@ import java.util.List;
 public class TipsAdapter extends RecyclerView.Adapter<TipsAdapter.TipsViewHolder> {
 
     private final List<String> tipList;
+    private final List<String> tipDescList;
 
-    public TipsAdapter(List<String> tipList) {
+    public TipsAdapter(List<String> tipList, List<String> tipDescList) {
         this.tipList = tipList;
+        this.tipDescList = tipDescList;
     }
 
     @NonNull
@@ -30,6 +32,7 @@ public class TipsAdapter extends RecyclerView.Adapter<TipsAdapter.TipsViewHolder
     @Override
     public void onBindViewHolder(@NonNull TipsViewHolder holder, int position) {
         holder.tipText.setText(tipList.get(position));
+        holder.tipDesc.setText(tipDescList.get(position));
     }
 
     @Override
@@ -38,11 +41,12 @@ public class TipsAdapter extends RecyclerView.Adapter<TipsAdapter.TipsViewHolder
     }
 
     static class TipsViewHolder extends RecyclerView.ViewHolder {
-        TextView tipText;
+        TextView tipText, tipDesc;
 
         public TipsViewHolder(@NonNull View itemView) {
             super(itemView);
             tipText = itemView.findViewById(R.id.tipContent);
+            tipDesc = itemView.findViewById(R.id.tipDescription);
         }
     }
 }

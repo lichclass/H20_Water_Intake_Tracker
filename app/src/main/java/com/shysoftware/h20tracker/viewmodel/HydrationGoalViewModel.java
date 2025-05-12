@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,7 +28,9 @@ public class HydrationGoalViewModel extends ViewModel {
 
     private final HydrationGoalRepository hydrationGoalRepository = new HydrationGoalRepository();
     private final MutableLiveData<HydrationGoal> todayGoal = new MutableLiveData<>();
+    private final MutableLiveData<LinkedHashMap<LocalDate, Double>> hydrationGoalMap = new MutableLiveData<>();
     public LiveData<HydrationGoal> getTodayGoal() { return todayGoal; }
+    public LiveData<LinkedHashMap<LocalDate, Double>> getAllHydrationGoals(){ return hydrationGoalMap; }
 
     public void setTodayGoal(User user, WeatherData weatherData) {
         LocalDate today = LocalDate.now();
@@ -106,6 +109,39 @@ public class HydrationGoalViewModel extends ViewModel {
         });
     }
 
+
+    public void fetchAllGoals(String userId) {
+        hydrationGoalRepository.readAll(userId, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("HYDRATION_GOAL_ALL", "Failed to fetch all goals", e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful() && response.body() != null) {
+                    String body = response.body().string();
+                    LinkedHashMap<LocalDate, Double> goals = new LinkedHashMap<>();
+
+                    try {
+                        JSONArray arr = new JSONArray(body);
+                        for (int i = 0; i < arr.length(); i++) {
+                            JSONObject obj = arr.getJSONObject(i);
+                            LocalDate date = LocalDate.parse(obj.getString("forecast_date"));
+                            Double target = obj.getDouble("target_amount_ml");
+                            goals.put(date, target);
+                        }
+
+                        hydrationGoalMap.postValue(goals);
+                    } catch (JSONException e) {
+                        Log.e("HYDRATION_GOAL_ALL", "Parse error", e);
+                    }
+                }
+            }
+        });
+    }
+
+
     public Double computeAndStoreGoal(User user, WeatherData weatherData){
         double result = 0.00;
 
@@ -130,4 +166,6 @@ public class HydrationGoalViewModel extends ViewModel {
 
         return result;
     }
+
+
 }

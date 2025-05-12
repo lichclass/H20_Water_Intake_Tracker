@@ -38,18 +38,6 @@
             android:textColor="#555555"
             android:textSize="14sp" />
 
-        <!-- edit profile image -->
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="0dp"
-            android:src="@drawable/blank_profile"
-            android:layout_margin="10px"
-            android:scaleType="centerCrop"
-            android:background="@drawable/profile_circle_shape"
-            android:clipToOutline="true"
-            android:contentDescription="Edit Profile Image" />
-
         <!-- Username -->
 
         <LinearLayout

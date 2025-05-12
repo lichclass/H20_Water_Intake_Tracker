@@ -36,8 +36,11 @@ public class InputDetailsActivity extends AppCompatActivity {
     private EditText usernameTxt, heightTxt, weightTxt, dateOfBirthTxt;
     private AutoCompleteTextView addressDropdown;
     private Spinner genderSpinner;
+
+
     private ArrayAdapter<Location> locationArrayAdapter;
     private UserViewModel userViewModel;
+
 
     private final String[] genders = {
             "Select Gender",

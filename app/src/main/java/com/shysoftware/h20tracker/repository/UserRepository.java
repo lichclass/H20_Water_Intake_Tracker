@@ -140,7 +140,6 @@ public class UserRepository {
 
         // 1. Store in Json
         JsonObject payload = new JsonObject();
-        payload.addProperty("user_id",       user.getUserId());
         payload.addProperty("username",      user.getUsername());
         payload.addProperty("location_lat",  user.getLocationLat());
         payload.addProperty("location_long", user.getLocationLong());
@@ -158,8 +157,8 @@ public class UserRepository {
 
         // 3. Preparation
         Request request = new Request.Builder()
-                .url(BuildConfig.SUPABASE_AUTH_URL + "/rest/v1/users?id=eq." + user.getUserId())
-                .patch(body) // Or PUT, depending on Supabase setup
+                .url(BuildConfig.SUPABASE_URL + "/users?user_id=eq." + user.getUserId())
+                .patch(body)
                 .addHeader("apikey", BuildConfig.SUPABASE_API_KEY)
                 .addHeader("Content-Type", "application/json")
                 .build();
