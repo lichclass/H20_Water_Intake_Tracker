@@ -1,4 +1,4 @@
-package com.shysoftware.h20tracker.views;
+package com.shysoftware.h20tracker.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -18,9 +18,7 @@ import com.shysoftware.h20tracker.model.WaterIntake;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteWaterAdapter extends RecyclerView.Adapter<DeleteWaterAdapter.ViewHolder>{

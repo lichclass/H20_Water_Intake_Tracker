@@ -1,5 +1,5 @@
 // HistoryAdapter.java
-package com.shysoftware.h20tracker.views;
+package com.shysoftware.h20tracker.utils;
 
 import android.view.LayoutInflater;
 import android.view.View;

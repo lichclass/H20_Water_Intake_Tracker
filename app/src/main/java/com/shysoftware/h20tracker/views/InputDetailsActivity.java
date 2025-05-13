@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,7 +23,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.shysoftware.h20tracker.R;
 import com.shysoftware.h20tracker.model.Gender;
 import com.shysoftware.h20tracker.model.Location;
+import com.shysoftware.h20tracker.model.Notification;
 import com.shysoftware.h20tracker.model.User;
+import com.shysoftware.h20tracker.utils.NotificationHelper;
+import com.shysoftware.h20tracker.viewmodel.NotificationViewModel;
 import com.shysoftware.h20tracker.viewmodel.UserViewModel;
 
 import java.time.LocalDate;
@@ -54,6 +56,7 @@ public class InputDetailsActivity extends AppCompatActivity {
     private static final String PREFS_NAME  = "user_prefs";
     private static final String KEY_USER_ID = "user_id";
 
+    NotificationViewModel notifViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +72,32 @@ public class InputDetailsActivity extends AppCompatActivity {
         signUpBtn        = findViewById(R.id.signUpButton);
 
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        notifViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
 
         userViewModel.getUpdateStatus().observe(this, success -> {
             if (success != null && success) {
                 Toast.makeText(this, "Profile created!", Toast.LENGTH_SHORT).show();
+
+                // Send a welcome SYSTEM notification using NotificationHelper
+                NotificationHelper.createNotificationChannel(this); // Ensure channel exists
+                NotificationHelper.sendNotification(
+                        this,
+                        "Welcome, " + userData.getUsername() + "!",
+                        "Your profile is now set up. Stay hydrated and track your water intake daily!"
+                );
+
+                Notification welcomeNotif = new Notification(
+                        null,
+                        userData.getUserId(),
+                        com.shysoftware.h20tracker.model.NotifyType.SYSTEM,
+                        "Welcome, " + userData.getUsername() + "!",
+                        "Your profile is now set up. Stay hydrated and track your water intake daily!",
+                        false,
+                        java.time.ZonedDateTime.now(),
+                        java.time.ZonedDateTime.now()
+                );
+                notifViewModel.logNotification(welcomeNotif);
+
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
             } else {

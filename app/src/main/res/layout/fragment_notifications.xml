@@ -5,15 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".views.NotificationsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
     <!-- This is the actual RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewNotifications"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="64dp"
         android:clipToPadding="false"
         android:padding="16dp"
         tools:itemCount="4"

@@ -24,10 +24,15 @@ import android.widget.TextView;
 
 import com.shysoftware.h20tracker.R;
 import com.shysoftware.h20tracker.model.HydrationGoal;
+import com.shysoftware.h20tracker.model.Notification;
 import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.model.WaterIntake;
 import com.shysoftware.h20tracker.model.WeatherData;
+import com.shysoftware.h20tracker.utils.DeleteWaterAdapter;
+import com.shysoftware.h20tracker.utils.NotificationHelper;
+import com.shysoftware.h20tracker.utils.TipsAdapter;
 import com.shysoftware.h20tracker.viewmodel.HydrationGoalViewModel;
+import com.shysoftware.h20tracker.viewmodel.NotificationViewModel;
 import com.shysoftware.h20tracker.viewmodel.UserViewModel;
 import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
 import com.shysoftware.h20tracker.viewmodel.WeatherDataViewModel;
@@ -45,6 +50,7 @@ public class DashboardFragment extends Fragment {
     private WeatherDataViewModel weatherDataViewModel;
     private HydrationGoalViewModel hydrationGoalViewModel;
     private WaterIntakeViewModel waterIntakeViewModel;
+    private NotificationViewModel notificationViewModel;
 
     // Data Models
     private User user;
@@ -76,6 +82,7 @@ public class DashboardFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
+
     @SuppressLint("DefaultLocale")
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -87,7 +94,6 @@ public class DashboardFragment extends Fragment {
         initViewModels();
         initViews(view);
         setupObservers();
-
 
         // Add Water Intake Modal
         imageButton.setOnClickListener(v -> {
@@ -148,6 +154,7 @@ public class DashboardFragment extends Fragment {
         weatherDataViewModel = new ViewModelProvider(requireActivity()).get(WeatherDataViewModel.class);
         hydrationGoalViewModel = new ViewModelProvider(requireActivity()).get(HydrationGoalViewModel.class);
         waterIntakeViewModel = new ViewModelProvider(requireActivity()).get(WaterIntakeViewModel.class);
+        notificationViewModel = new ViewModelProvider(requireActivity()).get(NotificationViewModel.class);
         addWaterModal = new Dialog(requireActivity());
         deleteWaterModal = new Dialog(requireActivity());
     }
@@ -189,6 +196,9 @@ public class DashboardFragment extends Fragment {
         deleteWaterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         deleteWaterAdapter = new DeleteWaterAdapter(requireActivity(), historyData, intake -> {waterIntakeViewModel.deleteIntakeEntry(intake, user);});
         deleteWaterRecyclerView.setAdapter(deleteWaterAdapter);
+
+        // Notification
+        NotificationHelper.createNotificationChannel(requireContext());
     }
 
     private void setWeatherDataUI(WeatherData weather){
@@ -226,6 +236,7 @@ public class DashboardFragment extends Fragment {
                 waterIntakeViewModel.getDailyIntakeGrouped(user);
                 hydrationGoalViewModel.fetchAllGoals(user.getUserId());
                 waterIntakeViewModel.computeWeeklyAverage(user);
+                notificationViewModel.getNotification(user.getUserId());
                 trySetGoal();
             }
         });
@@ -399,4 +410,5 @@ public class DashboardFragment extends Fragment {
                 "Adequate water intake is crucial for cardiovascular and renal functions."
         );
     }
+
 }

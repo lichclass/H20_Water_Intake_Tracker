@@ -22,13 +22,13 @@
         <!-- Use this activity for testing only -->
         <activity
             android:name=".views.TestActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".views.MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".views.SignUpActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".views.SignInActivity"
             android:exported="true">
@@ -40,7 +40,7 @@
         </activity>
         <activity
             android:name=".views.InputDetailsActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

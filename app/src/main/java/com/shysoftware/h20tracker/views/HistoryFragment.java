@@ -16,10 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.*;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.shysoftware.h20tracker.R;
 import com.shysoftware.h20tracker.model.WaterIntake;
+import com.shysoftware.h20tracker.utils.HistoryAdapter;
 import com.shysoftware.h20tracker.viewmodel.HydrationGoalViewModel;
 import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
 

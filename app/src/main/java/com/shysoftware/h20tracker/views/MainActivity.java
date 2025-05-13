@@ -3,11 +3,15 @@ package com.shysoftware.h20tracker.views;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -42,27 +46,24 @@ public class MainActivity extends AppCompatActivity {
     private WaterIntakeViewModel waterIntakeViewModel;
 
     private User user;
-    private WeatherData weatherData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Notification Permission Check
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (MainActivity.this.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
+
         // 1) Bind ALL your UI references up front:
-        drawerLayout   = findViewById(R.id.main);
-        navigationView = findViewById(R.id.nav_view);
-        View header = navigationView.getHeaderView(0);
-        navMenuBtn     = findViewById(R.id.nav_menu_btn);
-        screenName     = findViewById(R.id.screen_name);
-        headerUsernameTxt = header.findViewById(R.id.header_username);
-        headerCreatedYrTxt = header.findViewById(R.id.header_created_at);
+        initViews();
 
         // 2) Now set up your ViewModels
-        userViewModel         = new ViewModelProvider(this).get(UserViewModel.class);
-        weatherDataViewModel  = new ViewModelProvider(this).get(WeatherDataViewModel.class);
-        hydrationGoalViewModel= new ViewModelProvider(this).get(HydrationGoalViewModel.class);
-        waterIntakeViewModel  = new ViewModelProvider(this).get(WaterIntakeViewModel.class);
+        initVM();
 
         // 3) Read prefs & kick off initial data load
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -75,23 +76,10 @@ public class MainActivity extends AppCompatActivity {
         userViewModel.getCurrentUser().observe(this, u -> {
             if (u != null) {
                 this.user = u;
-                headerUsernameTxt.setText(u.getUsername());
-
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-                headerCreatedYrTxt.setText("Hydrated Since " + u.getCreatedAt().format(formatter));
-
-                // now that we have a user, fetch weather & water progress
-                weatherDataViewModel.setWeatherData(u);
-                waterIntakeViewModel.getProgress(u);
+                setupObservers(u);
             }
         });
 
-        // 5) Observe weather → set hydration goal
-        weatherDataViewModel.getTodayWeather().observe(this, w -> {
-            if (w != null && user != null) {
-                hydrationGoalViewModel.setTodayGoal(user, w);
-            }
-        });
 
         // 6) Set default screen on launch
         replaceFragment(new DashboardFragment(), "Dashboard");
@@ -141,12 +129,57 @@ public class MainActivity extends AppCompatActivity {
         screenName.setText(title);
     }
 
+    private void initViews(){
+        drawerLayout            = findViewById(R.id.main);
+        navigationView          = findViewById(R.id.nav_view);
+        View header             = navigationView.getHeaderView(0);
+        navMenuBtn              = findViewById(R.id.nav_menu_btn);
+        screenName              = findViewById(R.id.screen_name);
+        headerUsernameTxt       = header.findViewById(R.id.header_username);
+        headerCreatedYrTxt      = header.findViewById(R.id.header_created_at);
+    }
+
+    private void initVM(){
+        userViewModel           = new ViewModelProvider(this).get(UserViewModel.class);
+        weatherDataViewModel    = new ViewModelProvider(this).get(WeatherDataViewModel.class);
+        hydrationGoalViewModel  = new ViewModelProvider(this).get(HydrationGoalViewModel.class);
+        waterIntakeViewModel    = new ViewModelProvider(this).get(WaterIntakeViewModel.class);
+    }
+
+    private void setupObservers(User u){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+
+        headerUsernameTxt.setText(u.getUsername());
+        headerCreatedYrTxt.setText("Hydrated Since " + u.getCreatedAt().format(formatter));
+        weatherDataViewModel.setWeatherData(u);
+        waterIntakeViewModel.getProgress(u);
+
+        weatherDataViewModel.getTodayWeather().observe(this, w -> {
+            if (w != null) {
+                hydrationGoalViewModel.setTodayGoal(user, w);
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1001) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("PERMISSION", "Notification permission granted.");
+            } else {
+                Log.w("PERMISSION", "Notification permission denied.");
+            }
         }
     }
 }
