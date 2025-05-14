@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.shysoftware.h20tracker.R;
 import com.shysoftware.h20tracker.model.HydrationGoal;
+import com.shysoftware.h20tracker.model.Notification;
 import com.shysoftware.h20tracker.model.User;
 import com.shysoftware.h20tracker.model.WaterIntake;
 import com.shysoftware.h20tracker.model.WeatherData;
@@ -36,6 +37,7 @@ import com.shysoftware.h20tracker.viewmodel.WaterIntakeViewModel;
 import com.shysoftware.h20tracker.viewmodel.WeatherDataViewModel;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,6 +80,7 @@ public class HomeFragment extends Fragment {
     List<String> healthTipsDesc = new ArrayList<>();
     List<String> hydrationTipsTitle = new ArrayList<>();
     List<String> hydrationTipsDesc = new ArrayList<>();
+    boolean morningReminder = false, afternoonReminder = false;
 
     public HomeFragment() {}
 
@@ -282,8 +285,52 @@ public class HomeFragment extends Fragment {
         waterIntakeViewModel.getTodayIntake().observe(getViewLifecycleOwner(), progress -> {
             if(progress != null && hydrationGoal != null && user != null) {
                 this.todayIntake = progress;
-
                 double progPercent = (progress / hydrationGoal.getTargetAmountMl()) * 100;
+                // Notifications for Morning Reminder
+                int hour = LocalTime.now().getHour();
+                if (!morningReminder && hour >= 7 && progress == 0.00) {
+                    NotificationHelper.sendNotification(
+                            requireActivity(),
+                            "Morning Reminder",
+                            "Start your day right — drink a glass of water!"
+                    );
+                    notificationViewModel.getNotification(user.getUserId());
+                    morningReminder = true;
+//                    Notification welcomeNotif1 = new Notification(
+//                            null,
+//                              user.getUserId(),
+//                            com.shysoftware.h20tracker.model.NotifyType.SYSTEM,
+//                            "Morning Reminder",
+//                            "Start your day right — drink a glass of water!",
+//                            false,
+//                            java.time.ZonedDateTime.now(),
+//                            java.time.ZonedDateTime.now()
+//                    );
+//                    notificationViewModel.logNotification(welcomeNotif1);
+                }
+
+                // Notifications for Afternoon Reminder
+                if (!afternoonReminder && hour >= 12 && progPercent < 100) {
+                    NotificationHelper.sendNotification(
+                            requireActivity(),
+                            "Hydration Check",
+                            "Half the day’s gone — don’t forget to drink water and hit your hydration goal!"
+                    );
+                    notificationViewModel.getNotification(user.getUserId());
+                    afternoonReminder = true;
+//                    Notification welcomeNotif2 = new Notification(
+//                            null,
+//                            user.getUserId(),
+//                            com.shysoftware.h20tracker.model.NotifyType.SYSTEM,
+//                            "Hydration Check",
+//                            "Half the day’s gone — don’t forget to drink water and hit your hydration goal!",
+//                            false,
+//                            java.time.ZonedDateTime.now(),
+//                            java.time.ZonedDateTime.now()
+//                    );
+//                    notificationViewModel.logNotification(welcomeNotif2);
+                }
+
                 progressTxt.setText(String.format("%.0f mL / %.0f mL", this.todayIntake, this.hydrationGoal.getTargetAmountMl()));
                 progressBar.setProgress((int)progPercent);
 
@@ -411,7 +458,7 @@ public class HomeFragment extends Fragment {
         // 3) Progress‐and‐time tip (guard against null todayIntake / targetAmount)
         if (todayIntake != null && hydrationGoal.getTargetAmountMl() != null) {
             double progPercent = (todayIntake / hydrationGoal.getTargetAmountMl()) * 100.0;
-            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);  // 0–23
+            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             if (progPercent < 50.0 && hour >= 12) {
                 titles.add("Catch Up on Hydration");
                 descs.add("You’re halfway through the day but behind on water—have two 250 ml glasses before lunch to get back on track.");
@@ -422,6 +469,5 @@ public class HomeFragment extends Fragment {
         this.hydrationTipsTitle = titles;
         this.hydrationTipsDesc = descs;
     }
-
 
 }
