@@ -148,24 +148,32 @@ public class HydrationGoalViewModel extends ViewModel {
         double baselineWaterIntake = user.getWeight() * 35;
         result += baselineWaterIntake;
 
-        // Temp adjustment
-        if (weatherData.getTemperatureC() > 30.00){
-            result += 250.00;
-        } else if (weatherData.getTemperatureC() < 10.00) {
-            result -= 100.00;
-        }
-
-        // Humidity Adjustment
-        if (weatherData.getHumidityPercent() >= 80){
-            result += 250.00;
-        } else if (weatherData.getHumidityPercent() <= 30) {
-            result += 100.00;
-        }
+        result += computeAdjustment(weatherData.getTemperatureC(), weatherData.getHumidityPercent());
 
         if(result < 0){ result = 0.00; }
 
         return result;
     }
 
+
+    public Double computeAdjustment(Double temp, Integer humidity){
+        double result = 0.00;
+
+        // Temp adjustment
+        if (temp > 30.00){
+            result += 250.00;
+        } else if (temp < 10.00) {
+            result -= 100.00;
+        }
+
+        // Humidity Adjustment
+        if (humidity >= 80){
+            result += 250.00;
+        } else if (humidity <= 30) {
+            result += 100.00;
+        }
+
+        return result;
+    }
 
 }

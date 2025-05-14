@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/edittext_border"
+    android:elevation="4dp"
+    android:layout_marginEnd="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/home_tips_ic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hydration Tip"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:textColor="#000000"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tipContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your tip goes here"
+        android:textColor="#1A237E"
+        android:layout_marginTop="16dp"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tipDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your tip desc goes here"
+        android:textColor="#1A237E"
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        android:textStyle="italic" />
+
+</LinearLayout>

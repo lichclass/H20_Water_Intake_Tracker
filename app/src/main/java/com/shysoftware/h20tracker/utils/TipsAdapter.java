@@ -16,16 +16,22 @@ public class TipsAdapter extends RecyclerView.Adapter<TipsAdapter.TipsViewHolder
 
     private final List<String> tipList;
     private final List<String> tipDescList;
+    private String tipType;
 
-    public TipsAdapter(List<String> tipList, List<String> tipDescList) {
+    public TipsAdapter(List<String> tipList, List<String> tipDescList, String tipType) {
         this.tipList = tipList;
         this.tipDescList = tipDescList;
+        this.tipType = tipType;
     }
 
     @NonNull
     @Override
     public TipsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tip, parent, false);
+        int layout = R.layout.item_hydration_tip;
+        if(tipType.equals("health")){
+            layout = R.layout.item_health_tip;
+        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new TipsViewHolder(view);
     }
 

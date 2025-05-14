@@ -50,8 +50,10 @@
                     <ImageButton
                         android:id="@+id/modal_del_btn"
                         android:layout_width="28dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/modify_button" />
+                        android:layout_height="28dp"
+                        android:src="@drawable/modify_button"
+                        android:scaleType="fitCenter"
+                        android:background="@color/white"/>
 
                 </LinearLayout>
 
@@ -158,29 +160,38 @@
                                 android:layout_gravity="center"/>
                         </FrameLayout>
 
-                        <!-- Motivational Message -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="You're Doing Great!!"
-                            android:textSize="14sp"
-                            android:textColor="#4A90E2"
-                            android:layout_marginTop="8dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
             <!-- Tips -->
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/tipsViewPager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal"/>
 
 
             <!-- Progress Section (Second White Box) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <!-- for health tips, and changed id -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/healthtipsViewPager"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"/>
+
+                <!-- for hydration tips, and changed id -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/hydrationtipsViewPager"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

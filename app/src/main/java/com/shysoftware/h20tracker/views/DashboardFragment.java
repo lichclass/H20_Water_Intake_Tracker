@@ -59,7 +59,7 @@ public class DashboardFragment extends Fragment {
     private Double todayIntake;
 
     // UI Elements
-    TextView waterGoalTxt, progressTxt, dateTxt, dateDayTxt, tempTxt, weatherCondTxt, humidityTxt, waterAmountInput;
+    TextView waterGoalTxt, progressTxt, dateTxt, dateDayTxt, tempTxt, weatherCondTxt, humidityTxt, waterAmountInput, additionalWaterGoalTxt;
     ProgressBar progressBar, dailyProgress, weeklyProgress, monthlyProgress;
     Dialog addWaterModal, deleteWaterModal;
     ImageButton imageButton, closeBtn, delIntakeBtn;
@@ -67,9 +67,11 @@ public class DashboardFragment extends Fragment {
     ImageView weatherIcon, dailyProgIcon, weeklyProgIcon, monthlyProgIcon;
     ListView historyList;
     RecyclerView deleteWaterRecyclerView;
+    ViewPager2 healthTipsViewPager, hydrationTipsViewPager;
 
     // Others
     DeleteWaterAdapter deleteWaterAdapter;
+    TipsAdapter healthTipsAdapter, hydrationTipsAdapter;
     ArrayList<WaterIntake> historyData;
     List<String> tips;
     List<String> tipDesc;
@@ -91,7 +93,7 @@ public class DashboardFragment extends Fragment {
         /* ------------------ Place All View Logic Here ------------------ */
 
         // Initializations
-        initViewModels();
+        initVM();
         initViews(view);
         setupObservers();
 
@@ -140,16 +142,16 @@ public class DashboardFragment extends Fragment {
             deleteWaterModal.dismiss();
         });
 
-        ViewPager2 tipsViewPager = view.findViewById(R.id.tipsViewPager);
-
         initTipsData();
 
-        TipsAdapter tipsAdapter = new TipsAdapter(tips, tipDesc);
-        tipsViewPager.setAdapter(tipsAdapter);
+        healthTipsAdapter = new TipsAdapter(tips, tipDesc, "health");
+        hydrationTipsAdapter = new TipsAdapter(tips, tipDesc, "hydration");
+        healthTipsViewPager.setAdapter(healthTipsAdapter);
+        hydrationTipsViewPager.setAdapter(hydrationTipsAdapter);
 
     }
 
-    private void initViewModels(){
+    private void initVM(){
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         weatherDataViewModel = new ViewModelProvider(requireActivity()).get(WeatherDataViewModel.class);
         hydrationGoalViewModel = new ViewModelProvider(requireActivity()).get(HydrationGoalViewModel.class);
@@ -161,6 +163,7 @@ public class DashboardFragment extends Fragment {
 
     private void initViews(View view){
         waterGoalTxt = view.findViewById(R.id.waterGoal);
+        additionalWaterGoalTxt = view.findViewById(R.id.additionalWaterGoal);
         progressTxt = view.findViewById(R.id.progressText);
         progressBar = view.findViewById(R.id.progressBar);
         dailyProgress = view.findViewById(R.id.dailyProgress);
@@ -175,6 +178,8 @@ public class DashboardFragment extends Fragment {
         dailyProgIcon = view.findViewById(R.id.daily_prog_icon);
         weeklyProgIcon = view.findViewById(R.id.weekly_prog_icon);
         monthlyProgIcon = view.findViewById(R.id.monthly_prog_icon);
+        healthTipsViewPager = view.findViewById(R.id.healthtipsViewPager);
+        hydrationTipsViewPager = view.findViewById(R.id.hydrationtipsViewPager);
 
         // Add Intake Modal
         imageButton = view.findViewById(R.id.addWaterButton);
@@ -250,9 +255,12 @@ public class DashboardFragment extends Fragment {
         hydrationGoalViewModel.getTodayGoal().observe(getViewLifecycleOwner(), goal -> {
             if (goal != null) {
                 this.hydrationGoal = goal;
-
-                Log.d("HOME_FRAGMENT", "Hydration goal received: " + this.hydrationGoal.getTargetAmountMl());
                 waterGoalTxt.setText(String.format("%.0f ml", this.hydrationGoal.getTargetAmountMl()));
+
+                Double temp = weatherData.getTemperatureC();
+                Integer humidity = weatherData.getHumidityPercent();
+
+                additionalWaterGoalTxt.setText(String.format("%.0f mL", hydrationGoalViewModel.computeAdjustment(temp, humidity)));
             }
         });
         waterIntakeViewModel.getDeleteStatus().observe(getViewLifecycleOwner(), success -> {
