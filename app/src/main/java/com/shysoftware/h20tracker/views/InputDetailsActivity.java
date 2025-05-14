@@ -78,14 +78,16 @@ public class InputDetailsActivity extends AppCompatActivity {
             if (success != null && success) {
                 Toast.makeText(this, "Profile created!", Toast.LENGTH_SHORT).show();
 
-                // Send a welcome SYSTEM notification using NotificationHelper
+                // Phone Notification -------------------
                 NotificationHelper.createNotificationChannel(this); // Ensure channel exists
                 NotificationHelper.sendNotification(
                         this,
                         "Welcome, " + userData.getUsername() + "!",
                         "Your profile is now set up. Stay hydrated and track your water intake daily!"
                 );
+                // -------------------
 
+                // Save To Database -------------------
                 Notification welcomeNotif = new Notification(
                         null,
                         userData.getUserId(),
@@ -97,6 +99,7 @@ public class InputDetailsActivity extends AppCompatActivity {
                         java.time.ZonedDateTime.now()
                 );
                 notifViewModel.logNotification(welcomeNotif);
+                // -------------------
 
                 startActivity(new Intent(this, MainActivity.class));
                 finish();

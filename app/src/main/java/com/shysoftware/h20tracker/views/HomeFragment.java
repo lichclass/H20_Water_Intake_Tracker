@@ -39,6 +39,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -71,9 +72,12 @@ public class HomeFragment extends Fragment {
     DeleteWaterAdapter deleteWaterAdapter;
     TipsAdapter healthTipsAdapter, hydrationTipsAdapter;
     ArrayList<WaterIntake> historyData;
-    List<String> tips;
-    List<String> tipDesc;
 
+
+    List<String> healthTipsTitle = new ArrayList<>();
+    List<String> healthTipsDesc = new ArrayList<>();
+    List<String> hydrationTipsTitle = new ArrayList<>();
+    List<String> hydrationTipsDesc = new ArrayList<>();
 
     public HomeFragment() {}
 
@@ -139,13 +143,6 @@ public class HomeFragment extends Fragment {
         closeBtn.setOnClickListener(v -> {
             deleteWaterModal.dismiss();
         });
-
-        initTipsData();
-
-        healthTipsAdapter = new TipsAdapter(tips, tipDesc, "health");
-        hydrationTipsAdapter = new TipsAdapter(tips, tipDesc, "hydration");
-        healthTipsViewPager.setAdapter(healthTipsAdapter);
-        hydrationTipsViewPager.setAdapter(hydrationTipsAdapter);
 
     }
 
@@ -259,6 +256,14 @@ public class HomeFragment extends Fragment {
                 Integer humidity = weatherData.getHumidityPercent();
 
                 additionalWaterGoalTxt.setText(String.format("%.0f mL", hydrationGoalViewModel.computeAdjustment(temp, humidity)));
+
+                initHealthTipsData();
+                initHydrationTipsData();
+
+                healthTipsAdapter = new TipsAdapter(healthTipsTitle, healthTipsDesc, "health");
+                hydrationTipsAdapter = new TipsAdapter(hydrationTipsTitle, hydrationTipsDesc, "hydration");
+                healthTipsViewPager.setAdapter(healthTipsAdapter);
+                hydrationTipsViewPager.setAdapter(hydrationTipsAdapter);
             }
         });
         waterIntakeViewModel.getDeleteStatus().observe(getViewLifecycleOwner(), success -> {
@@ -369,52 +374,54 @@ public class HomeFragment extends Fragment {
         else return R.drawable.home_happy_icon;
     }
 
-    private void initTipsData() {
-        this.tips = Arrays.asList(
-                "Your brain runs better on water — sip now for a clearer mind.",
-                "Don’t wait until you're thirsty — that’s already a sign you need water.",
-                "A glass of water can help you feel more awake than a cup of coffee.",
-                "If your lips feel dry, your body’s asking for water.",
-                "Drinking water before meals can help with digestion.",
-                "Clear or light yellow pee = you're doing great with hydration!",
-                "Small sips throughout the day beat one big chug.",
-                "You need more water on hot days — even if you’re just sitting around.",
-                "Hydration helps your skin glow naturally (no filter needed).",
-                "Headache creeping in? Try a glass of water before reaching for meds.",
-                "Your body needs water to turn food into energy.",
-                "Feeling foggy or unfocused? That might be your brain asking for water.",
-                "You lose water when you breathe, sweat, and go to the bathroom — refill regularly.",
-                "Staying hydrated helps your mood stay steady too.",
-                "Dehydration can slow down your metabolism — drink up!",
-                "One sip now is one step toward hitting your goal.",
-                "Hydrated bodies recover faster after workouts — cheers to that!",
-                "Every glass logged is a win — keep going!",
-                "Start your day with water — your body’s been fasting all night.",
-                "Hydration supports your heart, kidneys, and overall health."
+    private void initHealthTipsData() {
+        this.healthTipsTitle = Arrays.asList(
+                "Move More, Sit Less",
+                "Balanced Nutrition",
+                "Quality Sleep"
         );
 
-        this.tipDesc = Arrays.asList(
-                "Even mild dehydration (1–2% body weight loss) can impair cognitive performance.",
-                "Thirst is a late indicator; by the time you feel thirsty, you're already dehydrated.",
-                "Dehydration can cause fatigue; rehydrating can improve energy levels.",
-                "Dry mouth and lips are common early signs of dehydration.",
-                "Adequate hydration aids in digestion and nutrient absorption.",
-                "Urine color is a practical indicator of hydration status; pale yellow suggests adequate hydration.",
-                "Consistent water intake maintains hydration better than infrequent large volumes.",
-                "Heat increases water loss through perspiration, necessitating increased intake.",
-                "Proper hydration maintains skin elasticity and appearance.",
-                "Dehydration is a common cause of headaches; rehydration can alleviate symptoms.",
-                "Water is essential for metabolic processes, including energy production.",
-                "Cognitive functions decline with even mild dehydration.",
-                "Daily water loss occurs through various means, requiring regular replenishment.",
-                "Hydration status can influence mood and mental well-being.",
-                "Insufficient water intake can negatively affect metabolic rate.",
-                "Incremental water intake contributes to meeting daily hydration needs.",
-                "Proper hydration aids in muscle recovery and reduces fatigue post-exercise.",
-                "Tracking water intake can improve hydration habits and awareness.",
-                "Drinking water in the morning helps rehydrate the body after sleep.",
-                "Adequate water intake is crucial for cardiovascular and renal functions."
+        this.healthTipsDesc = Arrays.asList(
+                "Incorporate short activity breaks into your day—stand up, stretch, or take a quick walk every hour to boost circulation and energy levels.",
+	            "Complement your hydration with nutrient-dense foods—eat fruits, vegetables, and lean proteins to help your body retain fluids and support overall health.",
+	            "Aim for 7–9 hours of uninterrupted sleep each night. Proper rest helps regulate hormones that control thirst and fluid balance."
         );
     }
+
+    private void initHydrationTipsData() {
+        // 1) Start with a mutable copy of your static tips
+        List<String> titles = new ArrayList<>(Arrays.asList(
+                "Drink Before You’re Thirsty",
+                "Infuse Your Water",
+                "Set Hydration Goals"
+        ));
+        List<String> descs = new ArrayList<>(Arrays.asList(
+                "Keep a reusable water bottle within reach and take small sips regularly instead of waiting until you feel parched.",
+                "Add natural flavor enhancers like lemon, cucumber slices, or fresh mint to your water to make drinking more enjoyable.",
+                "Use the app’s daily target feature to break down your intake into manageable portions and get reminders when you fall behind."
+        ));
+
+        // 2) Temperature‐based tip (guard against a null basisTemp)
+        Double basisTemp = hydrationGoal.getBasisTemp();
+        if (basisTemp != null && basisTemp >= 30.0) {
+            titles.add("It’s Hot Outside");
+            descs.add("High heat accelerates fluid loss—try drinking an extra 200 ml of water over the next hour to stay cool and hydrated.");
+        }
+
+        // 3) Progress‐and‐time tip (guard against null todayIntake / targetAmount)
+        if (todayIntake != null && hydrationGoal.getTargetAmountMl() != null) {
+            double progPercent = (todayIntake / hydrationGoal.getTargetAmountMl()) * 100.0;
+            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);  // 0–23
+            if (progPercent < 50.0 && hour >= 12) {
+                titles.add("Catch Up on Hydration");
+                descs.add("You’re halfway through the day but behind on water—have two 250 ml glasses before lunch to get back on track.");
+            }
+        }
+
+        // 4) Finally, update your fragment’s lists
+        this.hydrationTipsTitle = titles;
+        this.hydrationTipsDesc = descs;
+    }
+
 
 }
