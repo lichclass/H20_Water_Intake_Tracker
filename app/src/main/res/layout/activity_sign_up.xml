@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    >
+    tools:context="views.SignUpActivity"
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -135,6 +136,8 @@
             android:layout_marginTop="24dp"
             android:backgroundTint="#4579FF"
             android:text="Sign up"
+            android:textSize="16dp"
+            app:cornerRadius="5dp"
             android:textColor="#FFFFFF" />
 
         <LinearLayout
@@ -154,7 +157,9 @@
                 android:layout_height="wrap_content"
                 android:text="Sign in"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textColor="@color/text_dark_blue"/>
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
